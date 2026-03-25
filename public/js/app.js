@@ -250,7 +250,6 @@ async function loadCustomEquipment() {
     const res = await fetch('/api/equipment');
     const customEquipment = await res.json();
     customEquipment.forEach(eq => {
-      // Avoid duplicates
       if (!EQUIPMENT_LIST.find(e => e.id === eq.equipment_id)) {
         let instructions = [];
         try { instructions = JSON.parse(eq.instructions); } catch(e) {}
@@ -267,6 +266,27 @@ async function loadCustomEquipment() {
     });
   } catch (err) {
     console.error('Failed to load custom equipment:', err);
+  }
+
+  // Load overrides (hidden equipment + instruction edits)
+  try {
+    const res2 = await fetch('/api/equipment/overrides');
+    const overrides = await res2.json();
+    overrides.forEach(ov => {
+      if (ov.is_hidden) {
+        // Remove hidden equipment from list
+        const idx = EQUIPMENT_LIST.findIndex(e => e.id === ov.equipment_id);
+        if (idx !== -1) EQUIPMENT_LIST.splice(idx, 1);
+      } else if (ov.instructions) {
+        // Apply instruction overrides
+        const eq = EQUIPMENT_LIST.find(e => e.id === ov.equipment_id);
+        if (eq) {
+          try { eq.instructions = JSON.parse(ov.instructions); } catch(e) {}
+        }
+      }
+    });
+  } catch (err) {
+    console.error('Failed to load overrides:', err);
   }
 }
 
@@ -317,6 +337,7 @@ function renderEquipmentGrid() {
   const filtered = currentFilter === 'all' 
     ? EQUIPMENT_LIST 
     : EQUIPMENT_LIST.filter(eq => eq.category === currentFilter);
+  const isAdmin = currentUser && currentUser.isAdmin;
 
   grid.innerHTML = filtered.map(eq => {
     const status = statusMap[eq.id];
@@ -336,6 +357,7 @@ function renderEquipmentGrid() {
           </span>
         </div>
         ${isDone ? `<div class="eq-card-info">${status.workerName} · ${formatTime(status.cleanedAt)}</div>` : ''}
+        ${isAdmin ? `<button class="btn-delete-eq" onclick="event.stopPropagation();deleteEquipment('${eq.id}','${eq.name}')" title="Xóa thiết bị">🗑</button>` : ''}
       </div>
     `;
   }).join('');
@@ -414,6 +436,7 @@ function closeModal() {
 
 async function renderModalContent() {
   const body = document.getElementById('modalBody');
+  const isAdmin = currentUser && currentUser.isAdmin;
   
   // Load history
   let records = [];
@@ -424,31 +447,51 @@ async function renderModalContent() {
     console.error('Failed to load records:', err);
   }
 
-  const savedWorker = localStorage.getItem('workerName') || '';
+  const savedWorker = localStorage.getItem('workerName') || (currentUser ? currentUser.displayName : '');
   
   body.innerHTML = `
     <!-- Cleaning Instructions -->
     <div class="section">
-      <div class="section-title"><span class="icon">📋</span> Hướng dẫn vệ sinh</div>
-      <ol class="instructions-list">
-        ${currentEquipment.instructions.map((step, i) => `
-          <li class="instruction-step">
-            <span class="step-number">${i + 1}</span>
-            <span class="step-text">${step}</span>
-          </li>
-        `).join('')}
-      </ol>
+      <div class="section-title">
+        <span class="icon">📋</span> Hướng dẫn vệ sinh
+        ${isAdmin ? `<button class="btn-edit-instr" onclick="toggleEditInstructions()" title="Chỉnh sửa">✏️ Sửa</button>` : ''}
+      </div>
+      <div id="instructionsView">
+        <ol class="instructions-list">
+          ${currentEquipment.instructions.map((step, i) => `
+            <li class="instruction-step">
+              <span class="step-number">${i + 1}</span>
+              <span class="step-text">${step}</span>
+            </li>
+          `).join('')}
+        </ol>
+      </div>
+      <div id="instructionsEdit" style="display:none">
+        <div class="confirm-form">
+          <div class="form-group">
+            <textarea id="editInstructionsText" rows="8" placeholder="Mỗi bước 1 dòng...">${currentEquipment.instructions.join('\n')}</textarea>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-confirm" style="flex:1" onclick="saveInstructions()"><span>💾</span> Lưu</button>
+            <button class="btn-confirm" style="flex:1;background:var(--border)" onclick="toggleEditInstructions()"><span>✕</span> Hủy</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Photo Upload -->
     <div class="section">
       <div class="section-title"><span class="icon">📸</span> Hình ảnh thực hiện</div>
-      <div class="photo-upload-area" id="photoUploadArea" onclick="document.getElementById('photoInput').click()">
-        <div class="upload-icon">📷</div>
-        <p>Chạm để chụp ảnh hoặc chọn từ thư viện</p>
-        <p class="upload-hint">Hỗ trợ JPG, PNG · Tối đa 5MB</p>
+      <div class="photo-upload-buttons">
+        <button class="btn-photo" onclick="openCamera()">
+          <span>📷</span> Chụp ảnh
+        </button>
+        <button class="btn-photo" onclick="openGallery()">
+          <span>🖼️</span> Thư viện
+        </button>
       </div>
-      <input type="file" id="photoInput" accept="image/*" capture="environment" multiple style="display:none" onchange="handlePhotoUpload(event)">
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoUpload(event)">
+      <input type="file" id="galleryInput" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
       <div class="photo-preview-grid" id="photoPreviewGrid"></div>
     </div>
 
@@ -495,6 +538,80 @@ async function renderModalContent() {
       }
     </div>
   `;
+}
+
+// ===== ADMIN: EDIT INSTRUCTIONS =====
+function toggleEditInstructions() {
+  const view = document.getElementById('instructionsView');
+  const edit = document.getElementById('instructionsEdit');
+  if (edit.style.display === 'none') {
+    edit.style.display = 'block';
+    view.style.display = 'none';
+  } else {
+    edit.style.display = 'none';
+    view.style.display = 'block';
+  }
+}
+
+async function saveInstructions() {
+  const text = document.getElementById('editInstructionsText').value.trim();
+  const instructions = text.split('\n').map(s => s.replace(/^(bước\s*\d+\s*[:.]?\s*)/i, '').trim()).filter(s => s);
+  
+  if (instructions.length === 0) {
+    showToast('⚠️ Hướng dẫn không được để trống');
+    return;
+  }
+  
+  try {
+    const res = await fetch(`/api/equipment/${currentEquipment.id}/instructions`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ instructions })
+    });
+    
+    if (!res.ok) throw new Error('Failed');
+    
+    // Update local data
+    currentEquipment.instructions = instructions;
+    const eq = EQUIPMENT_LIST.find(e => e.id === currentEquipment.id);
+    if (eq) eq.instructions = instructions;
+    
+    renderModalContent();
+    showToast('✅ Đã cập nhật hướng dẫn vệ sinh');
+  } catch (err) {
+    console.error('Save instructions error:', err);
+    showToast('❌ Lỗi khi lưu. Vui lòng thử lại.');
+  }
+}
+
+// ===== ADMIN: DELETE EQUIPMENT =====
+async function deleteEquipment(equipmentId, name) {
+  if (!confirm(`Xác nhận xóa thiết bị "${name}"?`)) return;
+  
+  try {
+    const res = await fetch(`/api/equipment/by-eid/${equipmentId}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Failed');
+    
+    // Remove from local list
+    const idx = EQUIPMENT_LIST.findIndex(e => e.id === equipmentId);
+    if (idx !== -1) EQUIPMENT_LIST.splice(idx, 1);
+    
+    renderEquipmentGrid();
+    updateProgress();
+    showToast('🗑 Đã xóa thiết bị');
+  } catch (err) {
+    console.error('Delete equipment error:', err);
+    showToast('❌ Lỗi khi xóa. Vui lòng thử lại.');
+  }
+}
+
+// ===== MOBILE PHOTO HELPERS =====
+function openCamera() {
+  document.getElementById('cameraInput').click();
+}
+
+function openGallery() {
+  document.getElementById('galleryInput').click();
 }
 
 // ===== PHOTO UPLOAD =====

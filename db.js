@@ -45,6 +45,15 @@ async function initDB() {
     `);
 
     await client.query(`
+      CREATE TABLE IF NOT EXISTS equipment_overrides (
+        equipment_id VARCHAR(50) PRIMARY KEY,
+        instructions TEXT,
+        is_hidden BOOLEAN DEFAULT FALSE,
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+
+    await client.query(`
       CREATE INDEX IF NOT EXISTS idx_cleaning_records_equipment 
       ON cleaning_records(equipment_id);
     `);

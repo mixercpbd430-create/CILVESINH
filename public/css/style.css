@@ -346,6 +346,103 @@ body {
   margin-top: 6px;
 }
 
+/* Admin delete button on equipment card */
+.eq-card {
+  position: relative;
+}
+
+.btn-delete-eq {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+.eq-card:hover .btn-delete-eq {
+  opacity: 1;
+}
+
+.btn-delete-eq:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* Admin edit instructions button */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-edit-instr {
+  margin-left: auto;
+  padding: 4px 10px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: var(--transition);
+}
+
+.btn-edit-instr:hover {
+  background: rgba(6, 182, 212, 0.2);
+  border-color: var(--accent);
+}
+
+/* Mobile photo upload buttons */
+.photo-upload-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-photo {
+  flex: 1;
+  padding: 16px 12px;
+  background: var(--bg-input);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-photo span {
+  font-size: 1.5rem;
+}
+
+.btn-photo:hover {
+  border-color: var(--accent);
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.btn-photo:active {
+  transform: scale(0.97);
+}
+
 /* ===== MODAL ===== */
 .modal-overlay {
   position: fixed;

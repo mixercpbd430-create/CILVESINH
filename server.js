@@ -105,6 +105,17 @@ app.get('/api/equipment', async (req, res) => {
   }
 });
 
+// Get equipment overrides (hidden + instruction edits)
+app.get('/api/equipment/overrides', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM equipment_overrides');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching overrides:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Add new custom equipment
 app.post('/api/equipment', async (req, res) => {
   try {
@@ -133,7 +144,76 @@ app.post('/api/equipment', async (req, res) => {
   }
 });
 
-// Delete custom equipment
+// Hide/delete equipment (works for both built-in and custom)
+app.delete('/api/equipment/by-eid/:equipmentId', async (req, res) => {
+  try {
+    const eid = req.params.equipmentId;
+    
+    // Try to delete from custom_equipment first
+    const customDel = await pool.query(
+      'DELETE FROM custom_equipment WHERE equipment_id = $1 RETURNING *', [eid]
+    );
+    
+    if (customDel.rows.length > 0) {
+      return res.json({ success: true, type: 'custom_deleted' });
+    }
+    
+    // For built-in equipment, mark as hidden
+    await pool.query(
+      `INSERT INTO equipment_overrides (equipment_id, is_hidden)
+       VALUES ($1, TRUE)
+       ON CONFLICT (equipment_id) DO UPDATE SET is_hidden = TRUE, updated_at = NOW()`,
+      [eid]
+    );
+    
+    res.json({ success: true, type: 'builtin_hidden' });
+  } catch (err) {
+    console.error('Error hiding equipment:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Update instructions for any equipment
+app.put('/api/equipment/:equipmentId/instructions', async (req, res) => {
+  try {
+    const eid = req.params.equipmentId;
+    const { instructions } = req.body;
+    
+    if (!Array.isArray(instructions)) {
+      return res.status(400).json({ error: 'instructions must be an array' });
+    }
+    
+    const instrJson = JSON.stringify(instructions);
+    
+    // Check if it's a custom equipment
+    const custom = await pool.query(
+      'SELECT id FROM custom_equipment WHERE equipment_id = $1', [eid]
+    );
+    
+    if (custom.rows.length > 0) {
+      // Update custom equipment instructions
+      await pool.query(
+        'UPDATE custom_equipment SET instructions = $1 WHERE equipment_id = $2',
+        [instrJson, eid]
+      );
+    } else {
+      // Save override for built-in equipment
+      await pool.query(
+        `INSERT INTO equipment_overrides (equipment_id, instructions)
+         VALUES ($1, $2)
+         ON CONFLICT (equipment_id) DO UPDATE SET instructions = $2, updated_at = NOW()`,
+        [eid, instrJson]
+      );
+    }
+    
+    res.json({ success: true, instructions });
+  } catch (err) {
+    console.error('Error updating instructions:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Delete custom equipment by id
 app.delete('/api/equipment/:id', async (req, res) => {
   try {
     await pool.query('DELETE FROM custom_equipment WHERE id = $1', [req.params.id]);
