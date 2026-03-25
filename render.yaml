@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: cilvesinh
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_MVY6oR5bqLpZ@ep-dark-hall-a18niv4v-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      - key: NODE_ENV
+        value: production

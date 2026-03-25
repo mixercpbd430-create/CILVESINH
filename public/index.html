@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hệ thống quản lý vệ sinh định kỳ máy móc sản xuất">
+  <title>Vệ Sinh Máy Móc - Kiểm Tra Định Kỳ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="logo">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="10" fill="url(#grad1)"/>
+              <path d="M10 18L16 24L26 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs>
+                <linearGradient id="grad1" x1="0" y1="0" x2="36" y2="36">
+                  <stop stop-color="#06b6d4"/>
+                  <stop offset="1" stop-color="#0891b2"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div>
+            <h1>Vệ Sinh Máy Móc</h1>
+            <p class="header-subtitle" id="currentDate"></p>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="progress-ring-container">
+            <svg class="progress-ring" width="52" height="52">
+              <circle class="progress-ring-bg" cx="26" cy="26" r="22" />
+              <circle class="progress-ring-fill" id="progressRing" cx="26" cy="26" r="22" />
+            </svg>
+            <span class="progress-text" id="progressText">0%</span>
+          </div>
+          <span class="progress-label">Hoàn thành</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Filter Tabs -->
+    <div class="filter-bar">
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" data-filter="all">Tất cả</button>
+      </div>
+      <button class="btn-add-equipment" id="btnAddEquipment" onclick="openAddEquipmentModal()" title="Thêm thiết bị mới">＋</button>
+    </div>
+
+    <!-- Equipment Grid -->
+    <main class="main-content">
+      <div class="equipment-grid" id="equipmentGrid">
+        <!-- Cards rendered by JS -->
+      </div>
+    </main>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal" id="detailModal">
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-subtitle" id="modalSubtitle"></p>
+          </div>
+          <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Content rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Equipment Modal -->
+    <div class="modal-overlay" id="addEquipmentOverlay">
+      <div class="modal" id="addEquipmentModal">
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title">Thêm thiết bị mới</h2>
+            <p class="modal-subtitle">Nhập thông tin thiết bị cần vệ sinh</p>
+          </div>
+          <button class="modal-close" onclick="closeAddEquipmentModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="confirm-form">
+            <div class="form-group">
+              <label for="eqName">Tên thiết bị *</label>
+              <input type="text" id="eqName" placeholder="VD: Mixer, Blender, Sên...">
+            </div>
+            <div class="form-group">
+              <label for="eqCode">Mã số thiết bị *</label>
+              <input type="text" id="eqCode" placeholder="VD: 519, 534, 536.5...">
+            </div>
+            <div class="form-group">
+              <label for="eqCategory">Nhóm thiết bị *</label>
+              <select id="eqCategory">
+                <option value="Trộn">⚙️ Trộn</option>
+                <option value="Sàng lọc">🔍 Sàng lọc</option>
+                <option value="Lọc">🧲 Lọc</option>
+                <option value="Chứa">📦 Chứa</option>
+                <option value="Vận chuyển" selected>🔄 Vận chuyển</option>
+                <option value="Phân phối">🔀 Phân phối</option>
+                <option value="Ống dẫn">🔧 Ống dẫn</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Hướng dẫn vệ sinh (mỗi bước 1 dòng)</label>
+              <textarea id="eqInstructions" rows="5" placeholder="Bước 1: Tắt nguồn điện&#10;Bước 2: Mở nắp kiểm tra&#10;Bước 3: Quét sạch..."></textarea>
+            </div>
+            <button class="btn-confirm" id="btnSaveEquipment" onclick="saveNewEquipment()">
+              <span>＋</span> Thêm thiết bị
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/equipment.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
