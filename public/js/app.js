@@ -3,15 +3,240 @@ let statusMap = {};
 let currentFilter = 'all';
 let uploadedPhotos = [];
 let currentEquipment = null;
+let currentUser = null;
 
 // ===== INITIALIZATION =====
-document.addEventListener('DOMContentLoaded', async () => {
-  setCurrentDate();
-  await loadCustomEquipment();
-  buildFilterTabs();
-  loadStatusAndRender();
-  setupModalEvents();
+document.addEventListener('DOMContentLoaded', () => {
+  checkAuth();
+  
+  // Enter key handlers for login/register forms
+  document.getElementById('loginPassword').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+  document.getElementById('regPassword').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleRegister();
+  });
 });
+
+// ===== AUTH =====
+function checkAuth() {
+  const saved = localStorage.getItem('currentUser');
+  if (saved) {
+    currentUser = JSON.parse(saved);
+    showMainApp();
+  } else {
+    showAuthScreen();
+  }
+}
+
+function showAuthScreen() {
+  document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+}
+
+function showMainApp() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  
+  // Update user info
+  document.getElementById('userName').textContent = currentUser.displayName;
+  
+  // Show admin bar if admin
+  if (currentUser.isAdmin) {
+    document.getElementById('adminBar').style.display = 'block';
+  }
+  
+  // Init the main app
+  setCurrentDate();
+  loadCustomEquipment().then(() => {
+    buildFilterTabs();
+    loadStatusAndRender();
+    setupModalEvents();
+  });
+}
+
+function showLogin() {
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('registerForm').style.display = 'none';
+  document.getElementById('loginError').textContent = '';
+}
+
+function showRegister() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('registerForm').style.display = 'block';
+  document.getElementById('registerError').textContent = '';
+  document.getElementById('registerSuccess').textContent = '';
+}
+
+async function handleLogin() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errorEl = document.getElementById('loginError');
+  
+  if (!username || !password) {
+    errorEl.textContent = 'Vui lòng nhập tên đăng nhập và mật khẩu';
+    return;
+  }
+  
+  const btn = document.getElementById('btnLogin');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Đang đăng nhập...';
+  
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    
+    const data = await res.json();
+    
+    if (!res.ok) {
+      errorEl.textContent = data.error;
+      btn.disabled = false;
+      btn.innerHTML = '<span>🔐</span> Đăng nhập';
+      return;
+    }
+    
+    currentUser = data.user;
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    showMainApp();
+    
+  } catch (err) {
+    errorEl.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+  }
+  
+  btn.disabled = false;
+  btn.innerHTML = '<span>🔐</span> Đăng nhập';
+}
+
+async function handleRegister() {
+  const displayName = document.getElementById('regDisplayName').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const errorEl = document.getElementById('registerError');
+  const successEl = document.getElementById('registerSuccess');
+  
+  errorEl.textContent = '';
+  successEl.textContent = '';
+  
+  if (!displayName || !username || !password) {
+    errorEl.textContent = 'Vui lòng nhập đầy đủ thông tin';
+    return;
+  }
+  
+  if (password.length < 3) {
+    errorEl.textContent = 'Mật khẩu phải có ít nhất 3 ký tự';
+    return;
+  }
+  
+  const btn = document.getElementById('btnRegister');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Đang đăng ký...';
+  
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password, displayName })
+    });
+    
+    const data = await res.json();
+    
+    if (!res.ok) {
+      errorEl.textContent = data.error;
+    } else {
+      successEl.textContent = data.message;
+      document.getElementById('regDisplayName').value = '';
+      document.getElementById('regUsername').value = '';
+      document.getElementById('regPassword').value = '';
+    }
+  } catch (err) {
+    errorEl.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+  }
+  
+  btn.disabled = false;
+  btn.innerHTML = '<span>📝</span> Đăng ký';
+}
+
+function handleLogout() {
+  currentUser = null;
+  localStorage.removeItem('currentUser');
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('adminBar').style.display = 'none';
+  showAuthScreen();
+}
+
+// ===== ADMIN PANEL =====
+function toggleAdminPanel() {
+  const panel = document.getElementById('adminPanel');
+  if (panel.style.display === 'none') {
+    panel.style.display = 'block';
+    loadAdminUsers();
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+async function loadAdminUsers() {
+  try {
+    const res = await fetch('/api/admin/users');
+    const users = await res.json();
+    
+    const container = document.getElementById('adminUserList');
+    
+    if (users.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">👤</div><p>Chưa có thành viên nào đăng ký</p></div>';
+      return;
+    }
+    
+    const statusLabel = { pending: 'Chờ duyệt', approved: 'Đã duyệt', rejected: 'Từ chối' };
+    
+    container.innerHTML = users.map(u => `
+      <div class="admin-user-item">
+        <div class="admin-user-avatar">${getInitials(u.display_name)}</div>
+        <div class="admin-user-info">
+          <div class="admin-user-name">${u.display_name} <span class="status-badge ${u.status}">${statusLabel[u.status]}</span></div>
+          <div class="admin-user-username">@${u.username}</div>
+          <div class="admin-user-password">🔑 ${u.password}</div>
+          <div class="admin-user-date">${formatDateTime(u.created_at)}</div>
+        </div>
+        <div class="admin-user-actions">
+          ${u.status !== 'approved' ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'approved')">✓ Duyệt</button>` : ''}
+          ${u.status !== 'rejected' ? `<button class="btn-reject" onclick="updateUserStatus(${u.id}, 'rejected')">✕ Từ chối</button>` : ''}
+          <button class="btn-delete-user" onclick="deleteUser(${u.id})">🗑</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.error('Error loading users:', err);
+  }
+}
+
+async function updateUserStatus(userId, status) {
+  try {
+    await fetch(`/api/admin/users/${userId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    loadAdminUsers();
+    showToast(status === 'approved' ? '✅ Đã duyệt thành viên' : '❌ Đã từ chối thành viên');
+  } catch (err) {
+    console.error('Error updating user:', err);
+  }
+}
+
+async function deleteUser(userId) {
+  if (!confirm('Xác nhận xóa thành viên này?')) return;
+  try {
+    await fetch(`/api/admin/users/${userId}`, { method: 'DELETE' });
+    loadAdminUsers();
+    showToast('🗑 Đã xóa thành viên');
+  } catch (err) {
+    console.error('Error deleting user:', err);
+  }
+}
 
 function setCurrentDate() {
   const now = new Date();

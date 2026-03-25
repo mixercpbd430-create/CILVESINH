@@ -144,6 +144,131 @@ app.delete('/api/equipment/:id', async (req, res) => {
   }
 });
 
+// ===== AUTH ROUTES =====
+
+// Register new user
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { username, password, displayName } = req.body;
+    
+    if (!username || !password || !displayName) {
+      return res.status(400).json({ error: 'username, password, and displayName are required' });
+    }
+    
+    // Check if username already exists
+    const existing = await pool.query('SELECT id FROM users WHERE username = $1', [username]);
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: 'Tên đăng nhập đã tồn tại' });
+    }
+    
+    const result = await pool.query(
+      `INSERT INTO users (username, password, display_name, status) 
+      VALUES ($1, $2, $3, 'pending') RETURNING id, username, display_name, status`,
+      [username.toLowerCase(), password, displayName]
+    );
+    
+    res.status(201).json({ message: 'Đăng ký thành công! Vui lòng chờ Admin duyệt.', user: result.rows[0] });
+  } catch (err) {
+    console.error('Register error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Login
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    if (!username || !password) {
+      return res.status(400).json({ error: 'username and password are required' });
+    }
+    
+    // Admin login
+    if (username.toLowerCase() === 'admin' && password === '2810') {
+      return res.json({ 
+        success: true, 
+        user: { username: 'admin', displayName: 'Admin', isAdmin: true, status: 'approved' }
+      });
+    }
+    
+    // Normal user login
+    const result = await pool.query(
+      'SELECT id, username, display_name, status FROM users WHERE username = $1 AND password = $2',
+      [username.toLowerCase(), password]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'Sai tên đăng nhập hoặc mật khẩu' });
+    }
+    
+    const user = result.rows[0];
+    
+    if (user.status === 'pending') {
+      return res.status(403).json({ error: 'Tài khoản chưa được Admin duyệt. Vui lòng chờ.' });
+    }
+    
+    if (user.status === 'rejected') {
+      return res.status(403).json({ error: 'Tài khoản đã bị từ chối.' });
+    }
+    
+    res.json({ 
+      success: true, 
+      user: { username: user.username, displayName: user.display_name, isAdmin: false, status: user.status }
+    });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Admin: Get all users
+app.get('/api/admin/users', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT id, username, display_name, password, status, created_at FROM users ORDER BY created_at DESC'
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Admin: Update user status (approve/reject)
+app.put('/api/admin/users/:id', async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!['approved', 'rejected', 'pending'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
+    
+    const result = await pool.query(
+      'UPDATE users SET status = $1 WHERE id = $2 RETURNING *',
+      [status, req.params.id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating user:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Admin: Delete user
+app.delete('/api/admin/users/:id', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM users WHERE id = $1', [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Catch-all: serve index.html for SPA routing
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
