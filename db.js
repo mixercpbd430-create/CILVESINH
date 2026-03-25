@@ -54,6 +54,22 @@ async function initDB() {
     `);
 
     await client.query(`
+      CREATE TABLE IF NOT EXISTS global_config (
+        config_key VARCHAR(50) PRIMARY KEY,
+        config_value TEXT NOT NULL,
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+
+    // Seed default PPE and Tools if not exist
+    await client.query(`
+      INSERT INTO global_config (config_key, config_value) VALUES
+        ('ppe_items', '["Nón","Giày","Khẩu trang","Bao tay len"]'),
+        ('tool_items', '["Sủi cán gỗ ngắn","Sủi dao ngắn","Sủi dao dài","Sủi dài 1 mét","Chổi nhựa","Đèn pin","Ky rốt cám","Bao trắng"]')
+      ON CONFLICT (config_key) DO NOTHING;
+    `);
+
+    await client.query(`
       CREATE INDEX IF NOT EXISTS idx_cleaning_records_equipment 
       ON cleaning_records(equipment_id);
     `);

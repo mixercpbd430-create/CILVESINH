@@ -4,6 +4,8 @@ let currentFilter = 'all';
 let uploadedPhotos = [];
 let currentEquipment = null;
 let currentUser = null;
+let globalPpeItems = ['Nón', 'Giày', 'Khẩu trang', 'Bao tay len'];
+let globalToolItems = ['Sủi cán gỗ ngắn', 'Sủi dao ngắn', 'Sủi dao dài', 'Sủi dài 1 mét', 'Chổi nhựa', 'Đèn pin', 'Ky rốt cám', 'Bao trắng'];
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
@@ -48,7 +50,7 @@ function showMainApp() {
   
   // Init the main app
   setCurrentDate();
-  loadCustomEquipment().then(() => {
+  Promise.all([loadCustomEquipment(), loadGlobalConfig()]).then(() => {
     buildFilterTabs();
     loadStatusAndRender();
     setupModalEvents();
@@ -450,6 +452,39 @@ async function renderModalContent() {
   const savedWorker = localStorage.getItem('workerName') || (currentUser ? currentUser.displayName : '');
   
   body.innerHTML = `
+    <!-- Trang bị bảo hộ -->
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">🦺</span> Trang bị bảo hộ
+        ${isAdmin ? `<button class="btn-edit-instr" onclick="addConfigItem('ppe')" title="Thêm">＋ Thêm</button>` : ''}
+      </div>
+      <div class="ppe-grid">
+        ${globalPpeItems.map((item, i) => `
+          <div class="ppe-item">
+            <span class="ppe-icon">🔹</span>
+            <span class="ppe-label">${item}</span>
+            ${isAdmin ? `<button class="btn-remove-item" onclick="event.stopPropagation();removeConfigItem('ppe',${i})" title="Xóa">✕</button>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Dụng cụ chuẩn bị -->
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">🧹</span> Dụng cụ chuẩn bị
+        ${isAdmin ? `<button class="btn-edit-instr" onclick="addConfigItem('tool')" title="Thêm">＋ Thêm</button>` : ''}
+      </div>
+      <div class="tools-list">
+        ${globalToolItems.map((item, i) => `
+          <div class="tool-item">
+            ${item}
+            ${isAdmin ? `<button class="btn-remove-tag" onclick="event.stopPropagation();removeConfigItem('tool',${i})">✕</button>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
     <!-- Cleaning Instructions -->
     <div class="section">
       <div class="section-title">
@@ -603,6 +638,59 @@ async function deleteEquipment(equipmentId, name) {
     console.error('Delete equipment error:', err);
     showToast('❌ Lỗi khi xóa. Vui lòng thử lại.');
   }
+}
+// ===== GLOBAL CONFIG: PPE & TOOLS =====
+async function loadGlobalConfig() {
+  try {
+    const res = await fetch('/api/config');
+    const config = await res.json();
+    if (config.ppe_items && Array.isArray(config.ppe_items)) globalPpeItems = config.ppe_items;
+    if (config.tool_items && Array.isArray(config.tool_items)) globalToolItems = config.tool_items;
+  } catch (err) {
+    console.error('Failed to load global config:', err);
+  }
+}
+
+async function saveConfigItems(type) {
+  const key = type === 'ppe' ? 'ppe_items' : 'tool_items';
+  const value = type === 'ppe' ? globalPpeItems : globalToolItems;
+  try {
+    await fetch(`/api/config/${key}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ value })
+    });
+  } catch (err) {
+    console.error('Save config error:', err);
+    showToast('❌ Lỗi khi lưu. Vui lòng thử lại.');
+  }
+}
+
+function addConfigItem(type) {
+  const label = type === 'ppe' ? 'trang bị bảo hộ' : 'dụng cụ';
+  const name = prompt(`Nhập tên ${label} mới:`);
+  if (!name || !name.trim()) return;
+  
+  if (type === 'ppe') {
+    globalPpeItems.push(name.trim());
+  } else {
+    globalToolItems.push(name.trim());
+  }
+  
+  saveConfigItems(type);
+  renderModalContent();
+  showToast(`✅ Đã thêm "${name.trim()}"`);
+}
+
+async function removeConfigItem(type, index) {
+  const list = type === 'ppe' ? globalPpeItems : globalToolItems;
+  const item = list[index];
+  if (!confirm(`Xóa "${item}"?`)) return;
+  
+  list.splice(index, 1);
+  await saveConfigItems(type);
+  renderModalContent();
+  showToast(`🗑 Đã xóa "${item}"`);
 }
 
 // ===== MOBILE PHOTO HELPERS =====

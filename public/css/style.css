@@ -588,6 +588,111 @@ body {
   line-height: 1.5;
 }
 
+/* PPE (Trang bị bảo hộ) Grid */
+.ppe-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.ppe-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.ppe-item:hover {
+  border-color: var(--accent);
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.ppe-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.ppe-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Dụng cụ chuẩn bị (Tools) List */
+.tools-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tool-item {
+  padding: 7px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.tool-item:hover {
+  border-color: var(--accent);
+  background: rgba(6, 182, 212, 0.08);
+  color: var(--accent);
+}
+
+/* Remove buttons for PPE items */
+.ppe-item {
+  position: relative;
+}
+
+.btn-remove-item {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+  font-size: 0.65rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: var(--transition);
+  opacity: 0.6;
+}
+
+.btn-remove-item:hover {
+  background: rgba(239, 68, 68, 0.3);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Remove buttons for tool tags */
+.btn-remove-tag {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  cursor: pointer;
+  margin-left: 4px;
+  padding: 0 2px;
+  transition: var(--transition);
+  opacity: 0.5;
+}
+
+.btn-remove-tag:hover {
+  color: var(--danger);
+  opacity: 1;
+}
+
 /* Photo Upload */
 .photo-upload-area {
   border: 2px dashed var(--border-light);

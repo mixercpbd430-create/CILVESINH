@@ -349,6 +349,51 @@ app.delete('/api/admin/users/:id', async (req, res) => {
   }
 });
 
+// ===== GLOBAL CONFIG (PPE & Tools) =====
+
+// Get global config (ppe_items, tool_items)
+app.get('/api/config', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT config_key, config_value FROM global_config');
+    const config = {};
+    result.rows.forEach(row => {
+      try { config[row.config_key] = JSON.parse(row.config_value); } catch(e) { config[row.config_key] = row.config_value; }
+    });
+    res.json(config);
+  } catch (err) {
+    console.error('Error fetching config:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Update a config key
+app.put('/api/config/:key', async (req, res) => {
+  try {
+    const { key } = req.params;
+    const { value } = req.body;
+    
+    if (!['ppe_items', 'tool_items'].includes(key)) {
+      return res.status(400).json({ error: 'Invalid config key' });
+    }
+    
+    if (!Array.isArray(value)) {
+      return res.status(400).json({ error: 'Value must be an array' });
+    }
+    
+    await pool.query(
+      `INSERT INTO global_config (config_key, config_value, updated_at) 
+       VALUES ($1, $2, NOW())
+       ON CONFLICT (config_key) DO UPDATE SET config_value = $2, updated_at = NOW()`,
+      [key, JSON.stringify(value)]
+    );
+    
+    res.json({ success: true, key, value });
+  } catch (err) {
+    console.error('Error updating config:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Catch-all: serve index.html for SPA routing
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
