@@ -117,6 +117,9 @@
         <button class="btn-admin-panel" onclick="toggleAdminPanel()">
           <span>👑</span> Quản lý thành viên
         </button>
+        <button class="btn-admin-report" onclick="openReportModal()">
+          <span>📊</span> Xuất báo cáo
+        </button>
       </div>
 
       <!-- Admin Panel -->
@@ -136,6 +139,14 @@
           <button class="filter-tab active" data-filter="all">Tất cả</button>
         </div>
         <button class="btn-add-equipment" id="btnAddEquipment" onclick="openAddEquipmentModal()" title="Thêm thiết bị mới">＋</button>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="status-filter-bar" id="statusFilterBar">
+        <span class="filter-label">Trạng thái:</span>
+        <button class="status-filter-btn active" data-status="all" onclick="setStatusFilter('all', this)">Tất cả</button>
+        <button class="status-filter-btn" data-status="done" onclick="setStatusFilter('done', this)">✅ Đã vệ sinh</button>
+        <button class="status-filter-btn" data-status="pending" onclick="setStatusFilter('pending', this)">🟡 Chưa vệ sinh</button>
       </div>
 
       <!-- Equipment Grid -->
@@ -204,9 +215,41 @@
           </div>
         </div>
       </div>
+
+      <!-- Report Modal -->
+      <div class="modal-overlay" id="reportOverlay">
+        <div class="modal" id="reportModal">
+          <div class="modal-header">
+            <div>
+              <h2 class="modal-title">📊 Xuất báo cáo vệ sinh</h2>
+              <p class="modal-subtitle">Chọn khoảng thời gian để tạo báo cáo PDF</p>
+            </div>
+            <button class="modal-close" onclick="closeReportModal()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="confirm-form">
+              <div class="form-group">
+                <label for="reportFrom">Từ ngày</label>
+                <input type="date" id="reportFrom">
+              </div>
+              <div class="form-group">
+                <label for="reportTo">Đến ngày</label>
+                <input type="date" id="reportTo">
+              </div>
+              <div id="reportPreview" class="report-preview" style="display:none"></div>
+              <button class="btn-confirm" id="btnGenerateReport" onclick="generatePDFReport()">
+                <span>📄</span> Tạo báo cáo PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <script src="/js/lib/roboto-font.js"></script>
+  <script src="/js/lib/jspdf.umd.min.js"></script>
+  <script src="/js/lib/jspdf.plugin.autotable.min.js"></script>
   <script src="/js/equipment.js"></script>
   <script src="/js/app.js"></script>
 </body>

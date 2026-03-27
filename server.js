@@ -394,6 +394,36 @@ app.put('/api/config/:key', async (req, res) => {
   }
 });
 
+// ===== REPORT API =====
+
+// Get cleaning records for a date range (for PDF report)
+app.get('/api/reports', async (req, res) => {
+  try {
+    const { from, to } = req.query;
+    if (!from || !to) {
+      return res.status(400).json({ error: 'from and to dates are required' });
+    }
+    
+    const fromDate = new Date(from);
+    fromDate.setHours(0, 0, 0, 0);
+    const toDate = new Date(to);
+    toDate.setHours(23, 59, 59, 999);
+    
+    const result = await pool.query(
+      `SELECT id, equipment_id, worker_name, photo_data, notes, cleaned_at 
+      FROM cleaning_records 
+      WHERE cleaned_at >= $1 AND cleaned_at <= $2 
+      ORDER BY cleaned_at DESC`,
+      [fromDate.toISOString(), toDate.toISOString()]
+    );
+    
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching report data:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Catch-all: serve index.html for SPA routing
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

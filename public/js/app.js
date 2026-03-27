@@ -1,11 +1,15 @@
 // ===== APP STATE =====
 let statusMap = {};
 let currentFilter = 'all';
-let uploadedPhotos = [];
+let currentStatusFilter = 'all'; // 'all', 'done', 'pending'
+let uploadedPhotosBefore = [];
+let uploadedPhotosAfter = [];
 let currentEquipment = null;
 let currentUser = null;
 let globalPpeItems = ['Nón', 'Giày', 'Khẩu trang', 'Bao tay len'];
 let globalToolItems = ['Sủi cán gỗ ngắn', 'Sủi dao ngắn', 'Sủi dao dài', 'Sủi dài 1 mét', 'Chổi nhựa', 'Đèn pin', 'Ky rốt cám', 'Bao trắng'];
+let lightboxImages = [];
+let lightboxIndex = 0;
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
@@ -336,9 +340,17 @@ function buildFilterTabs() {
 // ===== EQUIPMENT GRID =====
 function renderEquipmentGrid() {
   const grid = document.getElementById('equipmentGrid');
-  const filtered = currentFilter === 'all' 
+  let filtered = currentFilter === 'all' 
     ? EQUIPMENT_LIST 
     : EQUIPMENT_LIST.filter(eq => eq.category === currentFilter);
+  
+  // Apply status filter
+  if (currentStatusFilter === 'done') {
+    filtered = filtered.filter(eq => !!statusMap[eq.id]);
+  } else if (currentStatusFilter === 'pending') {
+    filtered = filtered.filter(eq => !statusMap[eq.id]);
+  }
+  
   const isAdmin = currentUser && currentUser.isAdmin;
 
   grid.innerHTML = filtered.map(eq => {
@@ -363,6 +375,18 @@ function renderEquipmentGrid() {
       </div>
     `;
   }).join('');
+}
+
+// ===== STATUS FILTER =====
+function setStatusFilter(status, btn) {
+  currentStatusFilter = status;
+  document.querySelectorAll('.status-filter-btn').forEach(b => {
+    b.classList.remove('active', 'active-done', 'active-pending');
+  });
+  if (status === 'done') btn.classList.add('active-done');
+  else if (status === 'pending') btn.classList.add('active-pending');
+  else btn.classList.add('active');
+  renderEquipmentGrid();
 }
 
 // ===== PROGRESS RING =====
@@ -400,7 +424,9 @@ function setupModalEvents() {
     if (e.key === 'Escape') {
       const lightbox = document.querySelector('.lightbox.active');
       if (lightbox) {
-        lightbox.classList.remove('active');
+        closeLightbox();
+      } else if (document.getElementById('reportOverlay').classList.contains('active')) {
+        closeReportModal();
       } else if (document.getElementById('addEquipmentOverlay').classList.contains('active')) {
         closeAddEquipmentModal();
       } else {
@@ -514,20 +540,37 @@ async function renderModalContent() {
       </div>
     </div>
 
-    <!-- Photo Upload -->
+    <!-- Photo Upload: Before -->
     <div class="section">
       <div class="section-title"><span class="icon">📸</span> Hình ảnh thực hiện</div>
-      <div class="photo-upload-buttons">
-        <button class="btn-photo" onclick="openCamera()">
-          <span>📷</span> Chụp ảnh
-        </button>
-        <button class="btn-photo" onclick="openGallery()">
-          <span>🖼️</span> Thư viện
-        </button>
+      <div class="photo-before-after">
+        <div class="photo-ba-section">
+          <div class="photo-ba-label">📷 Trước khi vệ sinh</div>
+          <div class="photo-upload-buttons">
+            <button class="btn-photo btn-photo-sm" onclick="openCamera('before')">
+              <span>📷</span> Chụp
+            </button>
+            <button class="btn-photo btn-photo-sm" onclick="openGallery('before')">
+              <span>🖼️</span> Thư viện
+            </button>
+          </div>
+          <div class="photo-preview-grid" id="photoPreviewBefore"></div>
+        </div>
+        <div class="photo-ba-section">
+          <div class="photo-ba-label">📷 Sau khi vệ sinh</div>
+          <div class="photo-upload-buttons">
+            <button class="btn-photo btn-photo-sm" onclick="openCamera('after')">
+              <span>📷</span> Chụp
+            </button>
+            <button class="btn-photo btn-photo-sm" onclick="openGallery('after')">
+              <span>🖼️</span> Thư viện
+            </button>
+          </div>
+          <div class="photo-preview-grid" id="photoPreviewAfter"></div>
+        </div>
       </div>
-      <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoUpload(event)">
-      <input type="file" id="galleryInput" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
-      <div class="photo-preview-grid" id="photoPreviewGrid"></div>
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+      <input type="file" id="galleryInput" accept="image/*" multiple style="display:none">
     </div>
 
     <!-- Confirmation Form -->
@@ -554,21 +597,64 @@ async function renderModalContent() {
       ${records.length === 0 
         ? `<div class="empty-state"><div class="empty-icon">📭</div><p>Chưa có lịch sử vệ sinh</p></div>`
         : `<div class="history-list">
-            ${records.map(r => `
-              <div class="history-item">
-                <div class="history-avatar">${getInitials(r.worker_name)}</div>
-                <div class="history-info">
-                  <div class="history-name">${r.worker_name}</div>
-                  <div class="history-time">${formatDateTime(r.cleaned_at)}</div>
-                  ${r.notes ? `<div class="history-time" style="color:var(--text-secondary);margin-top:2px;">${r.notes}</div>` : ''}
-                </div>
-                ${r.photo_data ? `
-                  <div class="history-photo" onclick="event.stopPropagation();showLightbox('${r.photo_data}')">
-                    <img src="${r.photo_data}" alt="Ảnh vệ sinh" loading="lazy">
+            ${records.map(r => {
+              // Parse photos - support new {before,after}, old array, and single string
+              let photosBefore = [], photosAfter = [], photosAll = [];
+              if (r.photo_data) {
+                try {
+                  const parsed = JSON.parse(r.photo_data);
+                  if (parsed && parsed.before) {
+                    photosBefore = parsed.before || [];
+                    photosAfter = parsed.after || [];
+                    photosAll = [...photosBefore, ...photosAfter];
+                  } else if (Array.isArray(parsed)) {
+                    photosAll = parsed;
+                  } else {
+                    photosAll = [r.photo_data];
+                  }
+                } catch(e) {
+                  photosAll = [r.photo_data];
+                }
+              }
+              const hasBA = photosBefore.length > 0 || photosAfter.length > 0;
+              return `
+              <div class="history-item history-item-col">
+                <div class="history-item-top">
+                  <div class="history-avatar">${getInitials(r.worker_name)}</div>
+                  <div class="history-info">
+                    <div class="history-name">${r.worker_name}</div>
+                    <div class="history-time">${formatDateTime(r.cleaned_at)}</div>
+                    ${r.notes ? `<div class="history-time" style="color:var(--text-secondary);margin-top:2px;">${r.notes}</div>` : ''}
                   </div>
-                ` : ''}
-              </div>
-            `).join('')}
+                  ${isAdmin ? `<button class="btn-delete-record" onclick="event.stopPropagation();deleteRecord(${r.id}, this)" title="Xóa lịch sử">🗑</button>` : ''}
+                </div>
+                ${hasBA ? `
+                  <div class="history-ba-photos">
+                    ${photosBefore.length > 0 ? `
+                      <div class="history-ba-group" onclick="event.stopPropagation();showLightboxGallery(${JSON.stringify(photosBefore).replace(/"/g, '&quot;')}, 0)">
+                        <div class="history-ba-tag tag-before">Trước</div>
+                        <div class="history-photos-row">
+                          ${photosBefore.map((p, pi) => `<div class="history-photo-thumb"><img src="${p}" alt="Trước ${pi+1}" loading="lazy"></div>`).join('')}
+                        </div>
+                      </div>
+                    ` : ''}
+                    ${photosAfter.length > 0 ? `
+                      <div class="history-ba-group" onclick="event.stopPropagation();showLightboxGallery(${JSON.stringify(photosAfter).replace(/"/g, '&quot;')}, 0)">
+                        <div class="history-ba-tag tag-after">Sau</div>
+                        <div class="history-photos-row">
+                          ${photosAfter.map((p, pi) => `<div class="history-photo-thumb"><img src="${p}" alt="Sau ${pi+1}" loading="lazy"></div>`).join('')}
+                        </div>
+                      </div>
+                    ` : ''}
+                  </div>
+                ` : (photosAll.length > 0 ? `
+                  <div class="history-photos-row" style="margin-top:8px" onclick="event.stopPropagation();showLightboxGallery(${JSON.stringify(photosAll).replace(/"/g, '&quot;')}, 0)">
+                    ${photosAll.slice(0, 4).map((p, pi) => `<div class="history-photo-thumb"><img src="${p}" alt="Ảnh ${pi+1}" loading="lazy"></div>`).join('')}
+                    ${photosAll.length > 4 ? `<div class="history-photo-more">+${photosAll.length - 4}</div>` : ''}
+                  </div>
+                ` : '')}
+              </div>`;
+            }).join('')}
           </div>`
       }
     </div>
@@ -694,18 +780,27 @@ async function removeConfigItem(type, index) {
 }
 
 // ===== MOBILE PHOTO HELPERS =====
-function openCamera() {
-  document.getElementById('cameraInput').click();
+let currentPhotoType = 'before'; // 'before' or 'after'
+
+function openCamera(type) {
+  currentPhotoType = type || 'before';
+  const input = document.getElementById('cameraInput');
+  input.onchange = (e) => handlePhotoUpload(e, currentPhotoType);
+  input.click();
 }
 
-function openGallery() {
-  document.getElementById('galleryInput').click();
+function openGallery(type) {
+  currentPhotoType = type || 'before';
+  const input = document.getElementById('galleryInput');
+  input.onchange = (e) => handlePhotoUpload(e, currentPhotoType);
+  input.click();
 }
 
 // ===== PHOTO UPLOAD =====
-function handlePhotoUpload(event) {
+function handlePhotoUpload(event, type) {
   const files = event.target.files;
   if (!files.length) return;
+  const targetArr = type === 'after' ? uploadedPhotosAfter : uploadedPhotosBefore;
   
   Array.from(files).forEach(file => {
     if (file.size > 5 * 1024 * 1024) {
@@ -715,7 +810,6 @@ function handlePhotoUpload(event) {
     
     const reader = new FileReader();
     reader.onload = (e) => {
-      // Resize image to reduce storage
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
@@ -738,33 +832,42 @@ function handlePhotoUpload(event) {
         ctx.drawImage(img, 0, 0, w, h);
         
         const compressed = canvas.toDataURL('image/jpeg', 0.7);
-        uploadedPhotos.push(compressed);
-        renderPhotoPreview();
+        targetArr.push(compressed);
+        renderPhotoPreview(type);
       };
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   });
   
-  // Reset input so same file can be selected again
   event.target.value = '';
 }
 
-function renderPhotoPreview() {
-  const grid = document.getElementById('photoPreviewGrid');
+function renderPhotoPreview(type) {
+  // Render both grids
+  renderPhotoGrid('photoPreviewBefore', uploadedPhotosBefore, 'before');
+  renderPhotoGrid('photoPreviewAfter', uploadedPhotosAfter, 'after');
+}
+
+function renderPhotoGrid(gridId, photos, type) {
+  const grid = document.getElementById(gridId);
   if (!grid) return;
   
-  grid.innerHTML = uploadedPhotos.map((photo, i) => `
+  grid.innerHTML = photos.map((photo, i) => `
     <div class="photo-preview">
       <img src="${photo}" alt="Preview ${i+1}" onclick="showLightbox('${photo}')">
-      <button class="remove-photo" onclick="event.stopPropagation();removePhoto(${i})">✕</button>
+      <button class="remove-photo" onclick="event.stopPropagation();removePhoto('${type}',${i})">✕</button>
     </div>
   `).join('');
 }
 
-function removePhoto(index) {
-  uploadedPhotos.splice(index, 1);
-  renderPhotoPreview();
+function removePhoto(type, index) {
+  if (type === 'after') {
+    uploadedPhotosAfter.splice(index, 1);
+  } else {
+    uploadedPhotosBefore.splice(index, 1);
+  }
+  renderPhotoPreview(type);
 }
 
 // ===== SUBMIT CLEANING =====
@@ -790,7 +893,7 @@ async function submitCleaning() {
       body: JSON.stringify({
         equipmentId: currentEquipment.id,
         workerName: workerName,
-        photoData: uploadedPhotos.length > 0 ? uploadedPhotos[0] : null,
+        photoData: (uploadedPhotosBefore.length > 0 || uploadedPhotosAfter.length > 0) ? JSON.stringify({ before: uploadedPhotosBefore, after: uploadedPhotosAfter }) : null,
         notes: notes || null
       })
     });
@@ -822,18 +925,89 @@ async function submitCleaning() {
   }
 }
 
-// ===== LIGHTBOX =====
+// ===== LIGHTBOX WITH GALLERY NAVIGATION =====
+function showLightboxGallery(images, startIndex) {
+  lightboxImages = images;
+  lightboxIndex = startIndex || 0;
+  renderLightbox();
+}
+
 function showLightbox(imageSrc) {
+  showLightboxGallery([imageSrc], 0);
+}
+
+function renderLightbox() {
   let lightbox = document.querySelector('.lightbox');
   if (!lightbox) {
     lightbox = document.createElement('div');
     lightbox.className = 'lightbox';
-    lightbox.onclick = () => lightbox.classList.remove('active');
-    lightbox.innerHTML = '<img src="" alt="Phóng to">';
     document.body.appendChild(lightbox);
   }
-  lightbox.querySelector('img').src = imageSrc;
+  
+  const hasMultiple = lightboxImages.length > 1;
+  lightbox.innerHTML = `
+    ${hasMultiple ? `<button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();lightboxPrev()">‹</button>` : ''}
+    <img src="${lightboxImages[lightboxIndex]}" alt="Phóng to" onclick="event.stopPropagation()">
+    ${hasMultiple ? `<button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();lightboxNext()">›</button>` : ''}
+    ${hasMultiple ? `<div class="lightbox-counter">${lightboxIndex + 1} / ${lightboxImages.length}</div>` : ''}
+    <button class="lightbox-close" onclick="event.stopPropagation();closeLightbox()">✕</button>
+  `;
+  lightbox.onclick = (e) => { if (e.target === lightbox) closeLightbox(); };
   lightbox.classList.add('active');
+}
+
+function lightboxPrev() {
+  lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+  renderLightbox();
+}
+
+function lightboxNext() {
+  lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+  renderLightbox();
+}
+
+function closeLightbox() {
+  const lightbox = document.querySelector('.lightbox');
+  if (lightbox) lightbox.classList.remove('active');
+}
+
+// ===== ADMIN: DELETE CLEANING RECORD =====
+async function deleteRecord(recordId, btn) {
+  // Two-step delete: first click shows confirmation, second click deletes
+  if (btn.dataset.confirmDelete === 'true') {
+    // Second click - actually delete
+    btn.disabled = true;
+    try {
+      const res = await fetch(`/api/records/${recordId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed');
+      showToast('🗑 Đã xóa lịch sử vệ sinh');
+      // Refresh modal and status
+      await loadStatusAndRender();
+      renderModalContent();
+    } catch (err) {
+      console.error('Delete record error:', err);
+      showToast('❌ Lỗi khi xóa. Vui lòng thử lại.');
+      btn.disabled = false;
+      btn.dataset.confirmDelete = 'false';
+      btn.innerHTML = '🗑';
+      btn.classList.remove('btn-delete-record-confirm');
+    }
+  } else {
+    // First click - show confirmation state
+    btn.dataset.confirmDelete = 'true';
+    btn.innerHTML = '✓';
+    btn.classList.add('btn-delete-record-confirm');
+    btn.title = 'Nhấn lần nữa để xóa';
+    // Auto-reset after 3 seconds
+    setTimeout(() => {
+      if (btn && btn.dataset.confirmDelete === 'true') {
+        btn.dataset.confirmDelete = 'false';
+        btn.innerHTML = '🗑';
+        btn.classList.remove('btn-delete-record-confirm');
+        btn.title = 'Xóa lịch sử';
+      }
+    }, 3000);
+  }
 }
 
 // ===== TOAST =====
@@ -956,4 +1130,334 @@ async function saveNewEquipment() {
     btn.disabled = false;
     btn.innerHTML = '<span>＋</span> Thêm thiết bị';
   }
+}
+
+// ===== REPORT MODAL =====
+function openReportModal() {
+  // Set default dates: today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('reportFrom').value = today;
+  document.getElementById('reportTo').value = today;
+  document.getElementById('reportPreview').style.display = 'none';
+  
+  document.getElementById('reportOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeReportModal() {
+  document.getElementById('reportOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+async function generatePDFReport() {
+  const fromDate = document.getElementById('reportFrom').value;
+  const toDate = document.getElementById('reportTo').value;
+  
+  if (!fromDate || !toDate) {
+    showToast('⚠️ Vui lòng chọn ngày bắt đầu và kết thúc');
+    return;
+  }
+  
+  if (new Date(fromDate) > new Date(toDate)) {
+    showToast('⚠️ Ngày bắt đầu phải trước ngày kết thúc');
+    return;
+  }
+  
+  const btn = document.getElementById('btnGenerateReport');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Đang tạo báo cáo...';
+  
+  try {
+    // Fetch report data (includes photo_data)
+    const res = await fetch(`/api/reports?from=${fromDate}&to=${toDate}`);
+    if (!res.ok) throw new Error('Failed to fetch report');
+    const records = await res.json();
+    
+    // Build equipment lookup
+    const eqLookup = {};
+    EQUIPMENT_LIST.forEach(eq => {
+      eqLookup[eq.id] = { name: eq.name, code: eq.code, category: eq.category };
+    });
+    
+    // Generate PDF
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    const pageW = doc.internal.pageSize.width;
+    const pageH = doc.internal.pageSize.height;
+    
+    // Register Roboto font for Vietnamese
+    if (window.robotoFontBase64) {
+      doc.addFileToVFS('Roboto-Regular.ttf', window.robotoFontBase64);
+      doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal');
+      doc.setFont('Roboto', 'normal');
+    }
+    
+    const fromStr = formatDateVN(fromDate);
+    const toStr = formatDateVN(toDate);
+    const useRoboto = !!window.robotoFontBase64;
+    const setFont = (style) => {
+      if (useRoboto) doc.setFont('Roboto', 'normal');
+      else doc.setFont('helvetica', style || 'normal');
+    };
+    
+    // ===== PAGE 1: SUMMARY TABLE =====
+    doc.setFontSize(18);
+    setFont('bold');
+    doc.text('BÁO CÁO VỆ SINH MÁY MÓC', pageW / 2, 18, { align: 'center' });
+    
+    doc.setFontSize(11);
+    setFont();
+    doc.text(`Từ ngày: ${fromStr}  -  Đến ngày: ${toStr}`, pageW / 2, 26, { align: 'center' });
+    
+    // Summary stats
+    const cleanedEqIds = new Set(records.map(r => r.equipment_id));
+    const totalEquipment = EQUIPMENT_LIST.length;
+    const cleanedCount = cleanedEqIds.size;
+    const notCleanedCount = totalEquipment - cleanedCount;
+    
+    doc.setFontSize(10);
+    setFont();
+    doc.text(`Tổng thiết bị: ${totalEquipment}  |  Đã vệ sinh: ${cleanedCount}  |  Chưa vệ sinh: ${notCleanedCount}`, 14, 34);
+    
+    // Table of cleaning records
+    const fontName = useRoboto ? 'Roboto' : 'helvetica';
+    
+    if (records.length > 0) {
+      const tableData = records.map((r, i) => {
+        const eq = eqLookup[r.equipment_id] || { name: r.equipment_id, code: '-', category: '-' };
+        const dt = new Date(r.cleaned_at);
+        return [
+          i + 1,
+          eq.name,
+          '#' + eq.code,
+          eq.category,
+          r.worker_name,
+          dt.toLocaleDateString('vi-VN'),
+          dt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+          r.notes || ''
+        ];
+      });
+      
+      doc.autoTable({
+        startY: 38,
+        head: [['STT', 'Thiết bị', 'Mã', 'Nhóm', 'Người thực hiện', 'Ngày', 'Giờ', 'Ghi chú']],
+        body: tableData,
+        styles: { fontSize: 8, cellPadding: 2, font: fontName },
+        headStyles: { fillColor: [6, 182, 212], textColor: 255, fontStyle: 'bold', font: fontName },
+        alternateRowStyles: { fillColor: [240, 245, 249] },
+        columnStyles: {
+          0: { cellWidth: 10, halign: 'center' },
+          1: { cellWidth: 45 },
+          2: { cellWidth: 15, halign: 'center' },
+          3: { cellWidth: 25 },
+          4: { cellWidth: 35 },
+          5: { cellWidth: 25, halign: 'center' },
+          6: { cellWidth: 15, halign: 'center' },
+          7: { cellWidth: 'auto' }
+        }
+      });
+    } else {
+      doc.setFontSize(12);
+      setFont();
+      doc.text('Không có dữ liệu vệ sinh trong khoảng thời gian này.', pageW / 2, 50, { align: 'center' });
+    }
+    
+    // ===== NOT CLEANED EQUIPMENT LIST =====
+    const notCleanedEquipment = EQUIPMENT_LIST.filter(eq => !cleanedEqIds.has(eq.id));
+    if (notCleanedEquipment.length > 0) {
+      const currentY = doc.autoTable.previous ? doc.autoTable.previous.finalY + 10 : 60;
+      if (currentY > pageH - 40) doc.addPage();
+      
+      const startY = currentY > pageH - 40 ? 18 : currentY;
+      doc.setFontSize(12);
+      setFont('bold');
+      doc.text('THIẾT BỊ CHƯA VỆ SINH', 14, startY);
+      
+      const notCleanedData = notCleanedEquipment.map((eq, i) => [
+        i + 1, eq.name, '#' + eq.code, eq.category
+      ]);
+      
+      doc.autoTable({
+        startY: startY + 4,
+        head: [['STT', 'Thiết bị', 'Mã', 'Nhóm']],
+        body: notCleanedData,
+        styles: { fontSize: 8, cellPadding: 2, font: fontName },
+        headStyles: { fillColor: [245, 158, 11], textColor: 255, fontStyle: 'bold', font: fontName },
+        alternateRowStyles: { fillColor: [255, 249, 235] },
+        columnStyles: {
+          0: { cellWidth: 10, halign: 'center' },
+          1: { cellWidth: 60 },
+          2: { cellWidth: 20, halign: 'center' },
+          3: { cellWidth: 30 }
+        }
+      });
+    }
+    
+    // ===== DETAIL PAGES WITH IMAGES =====
+    const recordsWithPhotos = records.filter(r => r.photo_data);
+    if (recordsWithPhotos.length > 0) {
+      for (const r of recordsWithPhotos) {
+        const eq = eqLookup[r.equipment_id] || { name: r.equipment_id, code: '-', category: '-' };
+        const dt = new Date(r.cleaned_at);
+        
+        // Parse photos
+        let photosBefore = [], photosAfter = [], photosAll = [];
+        try {
+          const parsed = JSON.parse(r.photo_data);
+          if (parsed && parsed.before) {
+            photosBefore = parsed.before || [];
+            photosAfter = parsed.after || [];
+          } else if (Array.isArray(parsed)) {
+            photosAll = parsed;
+          } else {
+            photosAll = [r.photo_data];
+          }
+        } catch(e) {
+          photosAll = [r.photo_data];
+        }
+        
+        const hasPhotos = photosBefore.length > 0 || photosAfter.length > 0 || photosAll.length > 0;
+        if (!hasPhotos) continue;
+        
+        // New page for each equipment with photos
+        doc.addPage();
+        let y = 14;
+        
+        // Equipment header
+        doc.setFontSize(14);
+        setFont('bold');
+        doc.text(`${eq.name} - #${eq.code}`, 14, y);
+        y += 7;
+        
+        doc.setFontSize(9);
+        setFont();
+        doc.text(`Nhóm: ${eq.category}  |  Người thực hiện: ${r.worker_name}  |  Thời gian: ${dt.toLocaleDateString('vi-VN')} ${dt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}`, 14, y);
+        y += 4;
+        
+        // Draw separator
+        doc.setDrawColor(6, 182, 212);
+        doc.setLineWidth(0.5);
+        doc.line(14, y, pageW - 14, y);
+        y += 6;
+        
+        const imgMaxW = 80;
+        const imgMaxH = 60;
+        
+        if (photosBefore.length > 0 || photosAfter.length > 0) {
+          // Before photos
+          if (photosBefore.length > 0) {
+            doc.setFontSize(11);
+            setFont('bold');
+            doc.setTextColor(245, 158, 11);
+            doc.text('TRƯỚC KHI VỆ SINH', 14, y);
+            doc.setTextColor(0, 0, 0);
+            y += 4;
+            
+            let x = 14;
+            for (const photo of photosBefore.slice(0, 3)) {
+              try {
+                const imgFormat = photo.includes('image/png') ? 'PNG' : 'JPEG';
+                doc.addImage(photo, imgFormat, x, y, imgMaxW, imgMaxH);
+                x += imgMaxW + 5;
+                if (x + imgMaxW > pageW - 14) { x = 14; y += imgMaxH + 5; }
+              } catch(e) { console.warn('Could not add before image:', e); }
+            }
+            y += imgMaxH + 8;
+          }
+          
+          // Check if we need a new page for after photos
+          if (y + imgMaxH + 20 > pageH - 14 && photosAfter.length > 0) {
+            doc.addPage();
+            y = 14;
+          }
+          
+          // After photos
+          if (photosAfter.length > 0) {
+            doc.setFontSize(11);
+            setFont('bold');
+            doc.setTextColor(16, 185, 129);
+            doc.text('SAU KHI VỆ SINH', 14, y);
+            doc.setTextColor(0, 0, 0);
+            y += 4;
+            
+            let x = 14;
+            for (const photo of photosAfter.slice(0, 3)) {
+              try {
+                const imgFormat = photo.includes('image/png') ? 'PNG' : 'JPEG';
+                doc.addImage(photo, imgFormat, x, y, imgMaxW, imgMaxH);
+                x += imgMaxW + 5;
+                if (x + imgMaxW > pageW - 14) { x = 14; y += imgMaxH + 5; }
+              } catch(e) { console.warn('Could not add after image:', e); }
+            }
+          }
+        } else if (photosAll.length > 0) {
+          // Legacy format - show all photos
+          doc.setFontSize(11);
+          setFont('bold');
+          doc.text('HÌNH ẢNH', 14, y);
+          y += 4;
+          
+          let x = 14;
+          for (const photo of photosAll.slice(0, 6)) {
+            try {
+              const imgFormat = photo.includes('image/png') ? 'PNG' : 'JPEG';
+              doc.addImage(photo, imgFormat, x, y, imgMaxW, imgMaxH);
+              x += imgMaxW + 5;
+              if (x + imgMaxW > pageW - 14) { x = 14; y += imgMaxH + 5; }
+            } catch(e) { console.warn('Could not add image:', e); }
+          }
+        }
+      }
+    }
+    
+    // ===== FOOTER on all pages =====
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      setFont();
+      doc.text(
+        `Trang ${i}/${pageCount} - Xuất lúc: ${new Date().toLocaleString('vi-VN')}`,
+        pageW / 2, pageH - 8,
+        { align: 'center' }
+      );
+    }
+    
+    // Save
+    doc.save(`BaoCao_VeSinh_${fromDate}_${toDate}.pdf`);
+    showToast('✅ Đã tạo báo cáo PDF thành công!');
+    
+    // Show preview summary
+    const previewEl = document.getElementById('reportPreview');
+    previewEl.style.display = 'block';
+    previewEl.innerHTML = `
+      <div class="report-summary">
+        <div class="report-stat">
+          <div class="report-stat-value">${totalEquipment}</div>
+          <div class="report-stat-label">Tổng thiết bị</div>
+        </div>
+        <div class="report-stat report-stat-success">
+          <div class="report-stat-value">${cleanedCount}</div>
+          <div class="report-stat-label">Đã vệ sinh</div>
+        </div>
+        <div class="report-stat report-stat-warning">
+          <div class="report-stat-value">${notCleanedCount}</div>
+          <div class="report-stat-label">Chưa vệ sinh</div>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:8px;">${records.length} bản ghi vệ sinh trong khoảng thời gian</p>
+    `;
+    
+  } catch (err) {
+    console.error('Report generation error:', err);
+    showToast('❌ Lỗi khi tạo báo cáo. Vui lòng thử lại.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span>📄</span> Tạo báo cáo PDF';
+  }
+}
+
+function formatDateVN(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
