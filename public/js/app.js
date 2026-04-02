@@ -2,6 +2,8 @@
 let statusMap = {};
 let currentFilter = 'all';
 let currentStatusFilter = 'all'; // 'all', 'done', 'pending'
+let currentLine = 'all';
+let currentSearchQuery = '';
 let uploadedPhotosBefore = [];
 let uploadedPhotosAfter = [];
 let currentEquipment = null;
@@ -55,9 +57,11 @@ function showMainApp() {
   // Init the main app
   setCurrentDate();
   Promise.all([loadCustomEquipment(), loadGlobalConfig()]).then(() => {
+    buildLineTabs();
     buildFilterTabs();
     loadStatusAndRender();
     setupModalEvents();
+    setupSearchInput();
   });
 }
 
@@ -264,6 +268,7 @@ async function loadCustomEquipment() {
           name: eq.name,
           code: eq.code,
           category: eq.category,
+          line: eq.line || 'Mixer',
           instructions: instructions,
           isCustom: true,
           dbId: eq.id
@@ -309,11 +314,61 @@ async function loadStatusAndRender() {
   updateProgress();
 }
 
+// ===== LINE TABS =====
+function buildLineTabs() {
+  const container = document.getElementById('lineTabs');
+  const lines = getLines();
+  container.innerHTML = '';
+
+  // "All" tab
+  const allBtn = document.createElement('button');
+  allBtn.className = 'line-tab active';
+  allBtn.dataset.line = 'all';
+  allBtn.textContent = '📋 Tất cả';
+  allBtn.addEventListener('click', () => selectLine('all'));
+  container.appendChild(allBtn);
+
+  lines.forEach(line => {
+    const btn = document.createElement('button');
+    btn.className = 'line-tab';
+    btn.dataset.line = line;
+    btn.textContent = `${LINE_ICONS[line] || '📦'} ${line}`;
+    btn.addEventListener('click', () => selectLine(line));
+    container.appendChild(btn);
+  });
+}
+
+function selectLine(line) {
+  currentLine = line;
+  currentFilter = 'all';
+  document.querySelectorAll('.line-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.line-tab[data-line="${line}"]`).classList.add('active');
+  buildFilterTabs();
+  renderEquipmentGrid();
+  updateProgress();
+}
+
 // ===== FILTER TABS =====
 function buildFilterTabs() {
   const tabs = document.getElementById('filterTabs');
-  const categories = getCategories();
+  const categories = getCategories(currentLine);
   
+  // Clear existing tabs
+  tabs.innerHTML = '';
+
+  // "All" tab
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-tab active';
+  allBtn.dataset.filter = 'all';
+  allBtn.textContent = 'Tất cả';
+  allBtn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    allBtn.classList.add('active');
+    currentFilter = 'all';
+    renderEquipmentGrid();
+  });
+  tabs.appendChild(allBtn);
+
   categories.forEach(cat => {
     const btn = document.createElement('button');
     btn.className = 'filter-tab';
@@ -327,28 +382,48 @@ function buildFilterTabs() {
     });
     tabs.appendChild(btn);
   });
+}
 
-  // "All" tab click handler
-  tabs.querySelector('[data-filter="all"]').addEventListener('click', () => {
-    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-    tabs.querySelector('[data-filter="all"]').classList.add('active');
-    currentFilter = 'all';
-    renderEquipmentGrid();
+// ===== SEARCH =====
+function setupSearchInput() {
+  const input = document.getElementById('searchInput');
+  let debounceTimer;
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      currentSearchQuery = input.value.trim().toLowerCase();
+      renderEquipmentGrid();
+    }, 200);
   });
 }
 
 // ===== EQUIPMENT GRID =====
 function renderEquipmentGrid() {
   const grid = document.getElementById('equipmentGrid');
-  let filtered = currentFilter === 'all' 
-    ? EQUIPMENT_LIST 
-    : EQUIPMENT_LIST.filter(eq => eq.category === currentFilter);
+  
+  // Filter by line
+  let filtered = currentLine === 'all'
+    ? EQUIPMENT_LIST
+    : EQUIPMENT_LIST.filter(eq => eq.line === currentLine);
+  
+  // Filter by category
+  if (currentFilter !== 'all') {
+    filtered = filtered.filter(eq => eq.category === currentFilter);
+  }
   
   // Apply status filter
   if (currentStatusFilter === 'done') {
     filtered = filtered.filter(eq => !!statusMap[eq.id]);
   } else if (currentStatusFilter === 'pending') {
     filtered = filtered.filter(eq => !statusMap[eq.id]);
+  }
+  
+  // Apply search filter
+  if (currentSearchQuery) {
+    filtered = filtered.filter(eq => 
+      eq.name.toLowerCase().includes(currentSearchQuery) ||
+      eq.code.toLowerCase().includes(currentSearchQuery)
+    );
   }
   
   const isAdmin = currentUser && currentUser.isAdmin;
@@ -391,8 +466,11 @@ function setStatusFilter(status, btn) {
 
 // ===== PROGRESS RING =====
 function updateProgress() {
-  const total = EQUIPMENT_LIST.length;
-  const done = EQUIPMENT_LIST.filter(eq => statusMap[eq.id]).length;
+  const lineList = currentLine === 'all'
+    ? EQUIPMENT_LIST
+    : EQUIPMENT_LIST.filter(eq => eq.line === currentLine);
+  const total = lineList.length;
+  const done = lineList.filter(eq => statusMap[eq.id]).length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   
   document.getElementById('progressText').textContent = `${pct}%`;

@@ -1,10 +1,12 @@
 // Equipment master data with cleaning instructions
 const EQUIPMENT_LIST = [
+  // ==================== LINE: MIXER ====================
   {
     id: 'mixer-519',
     name: 'Mixer',
     code: '519',
     category: 'Trộn',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn điện và khóa an toàn trước khi vệ sinh',
       'Mở nắp mixer, dùng chổi quét sạch nguyên liệu còn bám bên trong',
@@ -19,6 +21,7 @@ const EQUIPMENT_LIST = [
     name: 'Blender',
     code: '534',
     category: 'Trộn',
+    line: 'Mixer',
     instructions: [
       'Ngắt điện, đảm bảo máy dừng hoàn toàn',
       'Mở cửa kiểm tra, quét sạch nguyên liệu tồn đọng',
@@ -33,6 +36,7 @@ const EQUIPMENT_LIST = [
     name: 'Cleaner',
     code: '536',
     category: 'Sàng lọc',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn và chờ máy dừng hẳn',
       'Tháo lưới sàng, vệ sinh sạch sẽ',
@@ -47,6 +51,7 @@ const EQUIPMENT_LIST = [
     name: 'Nam châm',
     code: '523',
     category: 'Lọc',
+    line: 'Mixer',
     instructions: [
       'Ngắt điện an toàn',
       'Rút thanh nam châm ra khỏi hộp',
@@ -61,6 +66,7 @@ const EQUIPMENT_LIST = [
     name: 'Hopper',
     code: '521',
     category: 'Chứa',
+    line: 'Mixer',
     instructions: [
       'Đảm bảo hopper đã xả hết nguyên liệu',
       'Mở cửa kiểm tra bên trong',
@@ -75,6 +81,7 @@ const EQUIPMENT_LIST = [
     name: 'Đầu sên',
     code: '522',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn điện, khóa an toàn',
       'Mở nắp đầu sên',
@@ -89,6 +96,7 @@ const EQUIPMENT_LIST = [
     name: 'Họng xuống chân gàu',
     code: '523',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Ngắt điện thiết bị liên quan',
       'Mở cửa kiểm tra họng xuống',
@@ -103,6 +111,7 @@ const EQUIPMENT_LIST = [
     name: 'Chân gàu',
     code: '523',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Tắt gàu tải, khóa an toàn',
       'Mở cửa kiểm tra chân gàu',
@@ -117,6 +126,7 @@ const EQUIPMENT_LIST = [
     name: 'Đầu gàu',
     code: '523',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Ngắt điện và khóa an toàn',
       'Mở nắp đầu gàu',
@@ -131,6 +141,7 @@ const EQUIPMENT_LIST = [
     name: 'Sên',
     code: '527',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn sên tải',
       'Mở nắp kiểm tra dọc theo thân sên',
@@ -145,6 +156,7 @@ const EQUIPMENT_LIST = [
     name: 'Họng xuống sên',
     code: '527',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Ngắt điện thiết bị',
       'Mở cửa kiểm tra họng xuống',
@@ -159,6 +171,7 @@ const EQUIPMENT_LIST = [
     name: 'Flapbox',
     code: '528',
     category: 'Phân phối',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn điện',
       'Mở nắp flapbox',
@@ -173,6 +186,7 @@ const EQUIPMENT_LIST = [
     name: 'Hopper',
     code: '530',
     category: 'Chứa',
+    line: 'Mixer',
     instructions: [
       'Xả hết nguyên liệu trong hopper',
       'Mở cửa kiểm tra bên trong',
@@ -187,6 +201,7 @@ const EQUIPMENT_LIST = [
     name: 'Vít tải',
     code: '531',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn vít tải',
       'Mở nắp kiểm tra',
@@ -201,6 +216,7 @@ const EQUIPMENT_LIST = [
     name: 'Sên tải',
     code: '533',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Ngắt điện sên tải',
       'Mở nắp dọc theo thân sên',
@@ -215,6 +231,7 @@ const EQUIPMENT_LIST = [
     name: 'Flapbox',
     code: '535',
     category: 'Phân phối',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn điện',
       'Mở nắp flapbox',
@@ -229,6 +246,7 @@ const EQUIPMENT_LIST = [
     name: 'Đầu trục máy sàng',
     code: '536',
     category: 'Sàng lọc',
+    line: 'Mixer',
     instructions: [
       'Tắt máy sàng hoàn toàn',
       'Mở nắp đầu trục',
@@ -243,6 +261,7 @@ const EQUIPMENT_LIST = [
     name: 'Vít tải',
     code: '536.5',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Ngắt nguồn điện',
       'Mở nắp kiểm tra vít tải',
@@ -257,6 +276,7 @@ const EQUIPMENT_LIST = [
     name: 'Flapbox',
     code: '537',
     category: 'Phân phối',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn điện',
       'Mở nắp flapbox',
@@ -271,6 +291,7 @@ const EQUIPMENT_LIST = [
     name: 'Flapbox',
     code: '537.5',
     category: 'Phân phối',
+    line: 'Mixer',
     instructions: [
       'Ngắt điện an toàn',
       'Mở nắp kiểm tra',
@@ -285,6 +306,7 @@ const EQUIPMENT_LIST = [
     name: 'Flapbox',
     code: '537.51',
     category: 'Phân phối',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn điện',
       'Mở nắp flapbox',
@@ -299,6 +321,7 @@ const EQUIPMENT_LIST = [
     name: 'Sên',
     code: '538.5',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn sên tải',
       'Mở nắp kiểm tra',
@@ -313,6 +336,7 @@ const EQUIPMENT_LIST = [
     name: 'Họng xuống sên',
     code: '538.5',
     category: 'Vận chuyển',
+    line: 'Mixer',
     instructions: [
       'Ngắt điện thiết bị',
       'Mở cửa họng xuống',
@@ -327,6 +351,7 @@ const EQUIPMENT_LIST = [
     name: 'Đoạn ống trên đầu quay',
     code: '550',
     category: 'Ống dẫn',
+    line: 'Mixer',
     instructions: [
       'Ngắt nguồn thiết bị liên quan',
       'Tháo kẹp nối ống (nếu có)',
@@ -341,6 +366,7 @@ const EQUIPMENT_LIST = [
     name: 'Đoạn ống trong đầu quay',
     code: '550',
     category: 'Ống dẫn',
+    line: 'Mixer',
     instructions: [
       'Ngắt nguồn an toàn',
       'Mở cửa kiểm tra đầu quay',
@@ -355,6 +381,7 @@ const EQUIPMENT_LIST = [
     name: 'Đoạn ống trên đầu quay',
     code: '538',
     category: 'Ống dẫn',
+    line: 'Mixer',
     instructions: [
       'Tắt nguồn thiết bị',
       'Tháo kẹp nối ống',
@@ -369,6 +396,7 @@ const EQUIPMENT_LIST = [
     name: 'Đoạn ống trong đầu quay',
     code: '538',
     category: 'Ống dẫn',
+    line: 'Mixer',
     instructions: [
       'Ngắt nguồn an toàn',
       'Mở kiểm tra đầu quay',
@@ -383,6 +411,7 @@ const EQUIPMENT_LIST = [
     name: 'Đoạn ống trong đầu quay',
     code: '548',
     category: 'Ống dẫn',
+    line: 'Mixer',
     instructions: [
       'Ngắt nguồn điện an toàn',
       'Mở cửa kiểm tra đầu quay',
@@ -391,13 +420,443 @@ const EQUIPMENT_LIST = [
       'Kiểm tra tình trạng ống và khớp nối',
       'Đóng cửa, siết chặt và ghi nhận'
     ]
+  },
+
+  // ==================== LINE: INTAKE ====================
+  {
+    id: 'filter-ham-intake-1',
+    name: 'Filter hầm intake 1',
+    code: 'I-01',
+    category: 'Lọc',
+    line: 'Intake',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Tháo nắp filter để kiểm tra',
+      'Vệ sinh sạch bụi và cặn bám trên lưới lọc',
+      'Dùng khí nén thổi sạch toàn bộ filter',
+      'Kiểm tra lưới lọc có bị hỏng không',
+      'Lắp lại và đóng nắp'
+    ]
+  },
+  {
+    id: 'filter-ham-intake-2',
+    name: 'Filter hầm intake 2',
+    code: 'I-02',
+    category: 'Lọc',
+    line: 'Intake',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Tháo nắp filter để kiểm tra',
+      'Vệ sinh sạch bụi và cặn bám trên lưới lọc',
+      'Dùng khí nén thổi sạch toàn bộ filter',
+      'Kiểm tra lưới lọc có bị hỏng không',
+      'Lắp lại và đóng nắp'
+    ]
+  },
+  {
+    id: 'filter-ham-intake-3',
+    name: 'Filter hầm intake 3',
+    code: 'I-03',
+    category: 'Lọc',
+    line: 'Intake',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Tháo nắp filter để kiểm tra',
+      'Vệ sinh sạch bụi và cặn bám trên lưới lọc',
+      'Dùng khí nén thổi sạch toàn bộ filter',
+      'Kiểm tra lưới lọc có bị hỏng không',
+      'Lắp lại và đóng nắp'
+    ]
+  },
+  {
+    id: 'sentai-566',
+    name: 'Sên tải',
+    code: '566',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'sentai-192',
+    name: 'Sên tải',
+    code: '192',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'sentai-182',
+    name: 'Sên tải',
+    code: '182',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'hongxuongchangau-567',
+    name: 'Họng xuống chân gàu',
+    code: '567',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện thiết bị liên quan',
+      'Mở cửa kiểm tra họng xuống',
+      'Quét sạch nguyên liệu bám dính',
+      'Dùng khí nén thổi sạch bên trong ống',
+      'Kiểm tra không bị tắc nghẽn',
+      'Đóng cửa kiểm tra'
+    ]
+  },
+  {
+    id: 'hongxuongchangau-192',
+    name: 'Họng xuống chân gàu',
+    code: '192',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện thiết bị liên quan',
+      'Mở cửa kiểm tra họng xuống',
+      'Quét sạch nguyên liệu bám dính',
+      'Dùng khí nén thổi sạch bên trong ống',
+      'Kiểm tra không bị tắc nghẽn',
+      'Đóng cửa kiểm tra'
+    ]
+  },
+  {
+    id: 'hongxuongchangau-182',
+    name: 'Họng xuống chân gàu',
+    code: '182',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện thiết bị liên quan',
+      'Mở cửa kiểm tra họng xuống',
+      'Quét sạch nguyên liệu bám dính',
+      'Dùng khí nén thổi sạch bên trong ống',
+      'Kiểm tra không bị tắc nghẽn',
+      'Đóng cửa kiểm tra'
+    ]
+  },
+  {
+    id: 'changau-567',
+    name: 'Chân gàu',
+    code: '567',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng ở đáy',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'changau-193',
+    name: 'Chân gàu',
+    code: '193',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng ở đáy',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'changau-183',
+    name: 'Chân gàu',
+    code: '183',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng ở đáy',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'salcurb-182',
+    name: 'Hệ thống phun Salcurb ở sên 182',
+    code: '182-S',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Tắt nguồn hệ thống phun',
+      'Kiểm tra và vệ sinh đầu phun Salcurb',
+      'Vệ sinh ống dẫn và van điều khiển',
+      'Kiểm tra không bị tắc nghẽn',
+      'Lau sạch bên ngoài hệ thống',
+      'Kiểm tra lại trước khi vận hành'
+    ]
+  },
+  {
+    id: 'daugau-576',
+    name: 'Đầu gàu',
+    code: '576',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện và khóa an toàn',
+      'Mở nắp đầu gàu',
+      'Vệ sinh sạch nguyên liệu bám trên bánh dẫn',
+      'Kiểm tra độ căng dây curoa',
+      'Thổi sạch bụi bằng khí nén',
+      'Đóng nắp và siết chặt'
+    ]
+  },
+  {
+    id: 'daugau-193',
+    name: 'Đầu gàu',
+    code: '193',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện và khóa an toàn',
+      'Mở nắp đầu gàu',
+      'Vệ sinh sạch nguyên liệu bám trên bánh dẫn',
+      'Kiểm tra độ căng dây curoa',
+      'Thổi sạch bụi bằng khí nén',
+      'Đóng nắp và siết chặt'
+    ]
+  },
+  {
+    id: 'daugau-183',
+    name: 'Đầu gàu',
+    code: '183',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện và khóa an toàn',
+      'Mở nắp đầu gàu',
+      'Vệ sinh sạch nguyên liệu bám trên bánh dẫn',
+      'Kiểm tra độ căng dây curoa',
+      'Thổi sạch bụi bằng khí nén',
+      'Đóng nắp và siết chặt'
+    ]
+  },
+  {
+    id: 'hongxuongdaugau-567',
+    name: 'Họng xuống đầu gàu',
+    code: '567',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện thiết bị liên quan',
+      'Mở cửa kiểm tra họng xuống',
+      'Quét sạch nguyên liệu bám dính',
+      'Dùng khí nén thổi sạch bên trong',
+      'Kiểm tra không bị tắc nghẽn',
+      'Đóng cửa và ghi nhận'
+    ]
+  },
+  {
+    id: 'hongxuongdaugau-193',
+    name: 'Họng xuống đầu gàu',
+    code: '193',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện thiết bị liên quan',
+      'Mở cửa kiểm tra họng xuống',
+      'Quét sạch nguyên liệu bám dính',
+      'Dùng khí nén thổi sạch bên trong',
+      'Kiểm tra không bị tắc nghẽn',
+      'Đóng cửa và ghi nhận'
+    ]
+  },
+  {
+    id: 'hongxuongdaugau-183',
+    name: 'Họng xuống đầu gàu',
+    code: '183',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện thiết bị liên quan',
+      'Mở cửa kiểm tra họng xuống',
+      'Quét sạch nguyên liệu bám dính',
+      'Dùng khí nén thổi sạch bên trong',
+      'Kiểm tra không bị tắc nghẽn',
+      'Đóng cửa và ghi nhận'
+    ]
+  },
+  {
+    id: 'sentai-569',
+    name: 'Sên tải',
+    code: '569',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'sentai-195',
+    name: 'Sên tải',
+    code: '195',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'sentai-185',
+    name: 'Sên tải',
+    code: '185',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'hongxuongsentai-569',
+    name: 'Họng xuống sên tải',
+    code: '569',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện thiết bị',
+      'Mở cửa kiểm tra họng xuống',
+      'Vệ sinh sạch nguyên liệu bám dính bên trong',
+      'Kiểm tra không bị tắc',
+      'Thổi sạch bằng khí nén',
+      'Đóng cửa và ghi nhận'
+    ]
+  },
+  {
+    id: 'hongxuongsentai-185',
+    name: 'Họng xuống sên tải',
+    code: '185',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện thiết bị',
+      'Mở cửa kiểm tra họng xuống',
+      'Vệ sinh sạch nguyên liệu bám dính bên trong',
+      'Kiểm tra không bị tắc',
+      'Thổi sạch bằng khí nén',
+      'Đóng cửa và ghi nhận'
+    ]
+  },
+  {
+    id: 'hongxuongsentai-195',
+    name: 'Họng xuống sên tải',
+    code: '195',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt điện thiết bị',
+      'Mở cửa kiểm tra họng xuống',
+      'Vệ sinh sạch nguyên liệu bám dính bên trong',
+      'Kiểm tra không bị tắc',
+      'Thổi sạch bằng khí nén',
+      'Đóng cửa và ghi nhận'
+    ]
+  },
+  {
+    id: 'dauquay-570',
+    name: 'Đầu quay',
+    code: '570',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt nguồn thiết bị',
+      'Mở nắp đầu quay',
+      'Vệ sinh sạch nguyên liệu bám trong đầu quay',
+      'Kiểm tra ổ bi và trục quay',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'dauquay-196',
+    name: 'Đầu quay',
+    code: '196',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt nguồn thiết bị',
+      'Mở nắp đầu quay',
+      'Vệ sinh sạch nguyên liệu bám trong đầu quay',
+      'Kiểm tra ổ bi và trục quay',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'dauquay-186',
+    name: 'Đầu quay',
+    code: '186',
+    category: 'Vận chuyển',
+    line: 'Intake',
+    instructions: [
+      'Ngắt nguồn thiết bị',
+      'Mở nắp đầu quay',
+      'Vệ sinh sạch nguyên liệu bám trong đầu quay',
+      'Kiểm tra ổ bi và trục quay',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và kiểm tra'
+    ]
   }
 ];
 
-// Get unique categories
-function getCategories() {
-  const cats = [...new Set(EQUIPMENT_LIST.map(eq => eq.category))];
-  return cats;
+// Get unique categories (optionally filtered by line)
+function getCategories(line) {
+  let list = EQUIPMENT_LIST;
+  if (line && line !== 'all') {
+    list = list.filter(eq => eq.line === line);
+  }
+  return [...new Set(list.map(eq => eq.category))];
+}
+
+// Get unique lines
+function getLines() {
+  return [...new Set(EQUIPMENT_LIST.map(eq => eq.line))];
 }
 
 // Category icons
@@ -409,4 +868,10 @@ const CATEGORY_ICONS = {
   'Vận chuyển': '🔄',
   'Phân phối': '🔀',
   'Ống dẫn': '🔧'
+};
+
+// Line icons
+const LINE_ICONS = {
+  'Mixer': '🏭',
+  'Intake': '📥'
 };
