@@ -631,6 +631,9 @@ async function renderModalContent() {
             <button class="btn-photo btn-photo-sm" onclick="openGallery('before')">
               <span>🖼️</span> Thư viện
             </button>
+            <button class="btn-photo btn-photo-sm btn-paste" onclick="pasteImage('before')">
+              <span>📋</span> Dán
+            </button>
           </div>
           <div class="photo-preview-grid" id="photoPreviewBefore"></div>
         </div>
@@ -642,6 +645,9 @@ async function renderModalContent() {
             </button>
             <button class="btn-photo btn-photo-sm" onclick="openGallery('after')">
               <span>🖼️</span> Thư viện
+            </button>
+            <button class="btn-photo btn-photo-sm btn-paste" onclick="pasteImage('after')">
+              <span>📋</span> Dán
             </button>
           </div>
           <div class="photo-preview-grid" id="photoPreviewAfter"></div>
@@ -872,6 +878,71 @@ function openGallery(type) {
   const input = document.getElementById('galleryInput');
   input.onchange = (e) => handlePhotoUpload(e, currentPhotoType);
   input.click();
+}
+
+async function pasteImage(type) {
+  const targetArr = type === 'after' ? uploadedPhotosAfter : uploadedPhotosBefore;
+
+  try {
+    const clipboardItems = await navigator.clipboard.read();
+    let foundImage = false;
+
+    for (const item of clipboardItems) {
+      const imageType = item.types.find(t => t.startsWith('image/'));
+      if (!imageType) continue;
+
+      foundImage = true;
+      const blob = await item.getType(imageType);
+
+      if (blob.size > 5 * 1024 * 1024) {
+        showToast('❌ Ảnh quá lớn (tối đa 5MB)');
+        continue;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800;
+          let w = img.width, h = img.height;
+
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round(h * maxDim / w);
+              w = maxDim;
+            } else {
+              w = Math.round(w * maxDim / h);
+              h = maxDim;
+            }
+          }
+
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const compressed = canvas.toDataURL('image/jpeg', 0.7);
+          targetArr.push(compressed);
+          renderPhotoPreview(type);
+          showToast('✅ Đã dán hình ảnh từ clipboard');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(blob);
+    }
+
+    if (!foundImage) {
+      showToast('⚠️ Không tìm thấy hình ảnh trong clipboard');
+    }
+  } catch (err) {
+    console.error('Paste image error:', err);
+    if (err.name === 'NotAllowedError') {
+      showToast('⚠️ Vui lòng cho phép truy cập clipboard');
+    } else {
+      showToast('⚠️ Không thể dán hình ảnh. Hãy copy ảnh trước rồi thử lại.');
+    }
+  }
 }
 
 // ===== PHOTO UPLOAD =====

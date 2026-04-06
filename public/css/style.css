@@ -514,6 +514,16 @@ body {
   transform: scale(0.97);
 }
 
+.btn-paste {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.06);
+}
+
+.btn-paste:hover {
+  border-color: var(--success);
+  background: rgba(16, 185, 129, 0.12);
+}
+
 /* ===== MODAL ===== */
 .modal-overlay {
   position: fixed;
