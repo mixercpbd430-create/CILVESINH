@@ -523,7 +523,8 @@ function openDetail(equipmentId) {
   currentEquipment = EQUIPMENT_LIST.find(eq => eq.id === equipmentId);
   if (!currentEquipment) return;
   
-  uploadedPhotos = [];
+  uploadedPhotosBefore = [];
+  uploadedPhotosAfter = [];
   
   document.getElementById('modalTitle').textContent = currentEquipment.name;
   document.getElementById('modalSubtitle').textContent = `Mã thiết bị: #${currentEquipment.code} · ${currentEquipment.category}`;
