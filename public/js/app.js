@@ -428,13 +428,23 @@ function renderEquipmentGrid() {
   
   const isAdmin = currentUser && currentUser.isAdmin;
 
+  // Build line-order index map (position of each equipment within its line)
+  const lineOrderMap = {};
+  EQUIPMENT_LIST.forEach(eq => {
+    if (!lineOrderMap[eq.line]) lineOrderMap[eq.line] = {};
+    const lineItems = EQUIPMENT_LIST.filter(e => e.line === eq.line);
+    lineOrderMap[eq.line][eq.id] = lineItems.indexOf(eq) + 1;
+  });
+
   grid.innerHTML = filtered.map(eq => {
     const status = statusMap[eq.id];
     const isDone = !!status;
     const icon = CATEGORY_ICONS[eq.category] || '⚙️';
+    const seqNum = lineOrderMap[eq.line] ? lineOrderMap[eq.line][eq.id] : '';
     
     return `
       <div class="eq-card ${isDone ? 'completed' : ''}" data-id="${eq.id}" onclick="openDetail('${eq.id}')">
+        <span class="eq-seq-num">${seqNum}</span>
         <div class="eq-card-header">
           <span class="eq-card-name">${icon} ${eq.name}</span>
           <span class="eq-card-code">#${eq.code}</span>

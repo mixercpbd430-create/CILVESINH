@@ -842,6 +842,991 @@ const EQUIPMENT_LIST = [
       'Dùng khí nén thổi sạch',
       'Đóng nắp và kiểm tra'
     ]
+  },
+
+  // ==================== LINE: INTAKE MINI ====================
+  {
+    id: 'sen-104-intakemini',
+    name: 'Sên',
+    code: '104',
+    category: 'Vận chuyển',
+    line: 'Intake mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'sen-204-intakemini',
+    name: 'Sên',
+    code: '204',
+    category: 'Vận chuyển',
+    line: 'Intake mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'gautai-105-intakemini',
+    name: 'Gàu tải',
+    code: '105',
+    category: 'Vận chuyển',
+    line: 'Intake mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'gautai-205-intakemini',
+    name: 'Gàu tải',
+    code: '205',
+    category: 'Vận chuyển',
+    line: 'Intake mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'sen-106-intakemini',
+    name: 'Sên',
+    code: '106',
+    category: 'Vận chuyển',
+    line: 'Intake mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'sen-206-intakemini',
+    name: 'Sên',
+    code: '206',
+    category: 'Vận chuyển',
+    line: 'Intake mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'dauquay-207-intakemini',
+    name: 'Đầu quay',
+    code: '207',
+    category: 'Vận chuyển',
+    line: 'Intake mini',
+    instructions: [
+      'Ngắt nguồn thiết bị',
+      'Mở nắp đầu quay',
+      'Vệ sinh sạch nguyên liệu bám trong đầu quay',
+      'Kiểm tra ổ bi và trục quay',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+
+  // ==================== LINE: MIXER MINI ====================
+  {
+    id: 'sen-108-mixermini',
+    name: 'Sên',
+    code: '108',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'sen-109-mixermini',
+    name: 'Sên',
+    code: '109',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'sen-110-mixermini',
+    name: 'Sên',
+    code: '110',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'mixer-426-mixermini',
+    name: 'Mixer',
+    code: '426',
+    category: 'Trộn',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn trước khi vệ sinh',
+      'Mở nắp mixer, dùng chổi quét sạch nguyên liệu còn bám bên trong',
+      'Dùng khí nén thổi sạch các góc khuất và khe hở',
+      'Lau sạch cánh trộn và thành trong bằng khăn ẩm',
+      'Kiểm tra seal cửa xả, vệ sinh sạch bụi bám',
+      'Đóng nắp, kiểm tra lại trước khi vận hành'
+    ]
+  },
+  {
+    id: 'handadd-414-mixermini',
+    name: 'Handadd',
+    code: '414',
+    category: 'Chứa',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp khu vực handadd',
+      'Quét sạch nguyên liệu tồn đọng bên trong',
+      'Dùng khí nén thổi sạch các góc khuất',
+      'Vệ sinh bề mặt bên ngoài',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'sen-422-mixermini',
+    name: 'Sên',
+    code: '422',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'gautai-423-mixermini',
+    name: 'Gàu tải',
+    code: '423',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'sen-425-mixermini',
+    name: 'Sên',
+    code: '425',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'sen-437-mixermini',
+    name: 'Sên',
+    code: '437',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'gautai-439-mixermini',
+    name: 'Gàu tải',
+    code: '439',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'sen-441-mixermini',
+    name: 'Sên',
+    code: '441',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'sen-442-mixermini',
+    name: 'Sên',
+    code: '442',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'sen-442.1-mixermini',
+    name: 'Sên',
+    code: '442.1',
+    category: 'Vận chuyển',
+    line: 'Mixer mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+
+  // ==================== LINE: REGRINDING MINI ====================
+  {
+    id: 'gautai-305-regrindingmini',
+    name: 'Gàu tải',
+    code: '305',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'sen-306-regrindingmini',
+    name: 'Sên',
+    code: '306',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'feeder-313-regrindingmini',
+    name: 'Feeder',
+    code: '313',
+    category: 'Phân phối',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt nguồn feeder và khóa an toàn',
+      'Mở nắp kiểm tra bên trong',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cơ cấu cấp liệu',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và kiểm tra hoạt động'
+    ]
+  },
+  {
+    id: 'feeder-353-regrindingmini',
+    name: 'Feeder',
+    code: '353',
+    category: 'Phân phối',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt nguồn feeder và khóa an toàn',
+      'Mở nắp kiểm tra bên trong',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cơ cấu cấp liệu',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và kiểm tra hoạt động'
+    ]
+  },
+  {
+    id: 'hammer-314-regrindingmini',
+    name: 'Hammer',
+    code: '314',
+    category: 'Nghiền',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp buồng nghiền',
+      'Vệ sinh sạch nguyên liệu bám trên búa nghiền và lưới sàng',
+      'Kiểm tra tình trạng búa nghiền và lưới',
+      'Dùng khí nén thổi sạch toàn bộ buồng nghiền',
+      'Đóng nắp và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'hammer-354-regrindingmini',
+    name: 'Hammer',
+    code: '354',
+    category: 'Nghiền',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp buồng nghiền',
+      'Vệ sinh sạch nguyên liệu bám trên búa nghiền và lưới sàng',
+      'Kiểm tra tình trạng búa nghiền và lưới',
+      'Dùng khí nén thổi sạch toàn bộ buồng nghiền',
+      'Đóng nắp và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'vit-317-regrindingmini',
+    name: 'Vít',
+    code: '317',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt nguồn vít tải',
+      'Mở nắp kiểm tra',
+      'Quét sạch nguyên liệu bám trên trục vít',
+      'Kiểm tra tình trạng cánh vít',
+      'Dùng khí nén thổi sạch toàn bộ máng',
+      'Đóng nắp và siết chặt bu lông'
+    ]
+  },
+  {
+    id: 'vit-358-regrindingmini',
+    name: 'Vít',
+    code: '358',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt nguồn vít tải',
+      'Mở nắp kiểm tra',
+      'Quét sạch nguyên liệu bám trên trục vít',
+      'Kiểm tra tình trạng cánh vít',
+      'Dùng khí nén thổi sạch toàn bộ máng',
+      'Đóng nắp và siết chặt bu lông'
+    ]
+  },
+  {
+    id: 'gautai-359-regrindingmini',
+    name: 'Gàu tải',
+    code: '359',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'gautai-318-regrindingmini',
+    name: 'Gàu tải',
+    code: '318',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'sentai-360-regrindingmini',
+    name: 'Sên tải',
+    code: '360',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'sentai-319-regrindingmini',
+    name: 'Sên tải',
+    code: '319',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'dauquay-361-regrindingmini',
+    name: 'Đầu quay',
+    code: '361',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Ngắt nguồn thiết bị',
+      'Mở nắp đầu quay',
+      'Vệ sinh sạch nguyên liệu bám trong đầu quay',
+      'Kiểm tra ổ bi và trục quay',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'dauquay-320-regrindingmini',
+    name: 'Đầu quay',
+    code: '320',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Ngắt nguồn thiết bị',
+      'Mở nắp đầu quay',
+      'Vệ sinh sạch nguyên liệu bám trong đầu quay',
+      'Kiểm tra ổ bi và trục quay',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'sen-365-regrindingmini',
+    name: 'Sên',
+    code: '365',
+    category: 'Vận chuyển',
+    line: 'Regrinding mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+
+  // ==================== LINE: PELLET 6 MINI ====================
+  {
+    id: 'sen-504-pellet6mini',
+    name: 'Sên',
+    code: '504',
+    category: 'Vận chuyển',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'sen-505-pellet6mini',
+    name: 'Sên',
+    code: '505',
+    category: 'Vận chuyển',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'gautai-506-pellet6mini',
+    name: 'Gàu tải',
+    code: '506',
+    category: 'Vận chuyển',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'sen-507-pellet6mini',
+    name: 'Sên',
+    code: '507',
+    category: 'Vận chuyển',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'conditioner-508-pellet6mini',
+    name: 'Conditioner',
+    code: '508',
+    category: 'Ép viên',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp conditioner',
+      'Vệ sinh sạch nguyên liệu bám trên cánh khuấy và thành trong',
+      'Kiểm tra tình trạng cánh khuấy',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'conditioner-509-pellet6mini',
+    name: 'Conditioner',
+    code: '509',
+    category: 'Ép viên',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp conditioner',
+      'Vệ sinh sạch nguyên liệu bám trên cánh khuấy và thành trong',
+      'Kiểm tra tình trạng cánh khuấy',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'maycamvien-510-pellet6mini',
+    name: 'Máy cám viên',
+    code: '510',
+    category: 'Ép viên',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp buồng ép',
+      'Vệ sinh sạch khuôn ép và con lăn',
+      'Kiểm tra tình trạng mài mòn khuôn và con lăn',
+      'Dùng khí nén thổi sạch toàn bộ buồng ép',
+      'Đóng nắp và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'vittaibui-513-pellet6mini',
+    name: 'Vít tải bụi',
+    code: '513',
+    category: 'Vận chuyển',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn vít tải',
+      'Mở nắp kiểm tra',
+      'Quét sạch bụi và nguyên liệu bám trên trục vít',
+      'Kiểm tra tình trạng cánh vít',
+      'Dùng khí nén thổi sạch toàn bộ máng',
+      'Đóng nắp và siết chặt bu lông'
+    ]
+  },
+  {
+    id: 'vittaibuicyclone-515-pellet6mini',
+    name: 'Vít tải bụi cyclone',
+    code: '515',
+    category: 'Vận chuyển',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn vít tải',
+      'Mở nắp kiểm tra',
+      'Quét sạch bụi bám trên trục vít và máng',
+      'Kiểm tra tình trạng cánh vít',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và siết chặt bu lông'
+    ]
+  },
+  {
+    id: 'cyclone-514-pellet6mini',
+    name: 'Cyclone',
+    code: '514',
+    category: 'Lọc',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở cửa kiểm tra bên trong cyclone',
+      'Vệ sinh sạch bụi và cặn bám trên thành trong',
+      'Kiểm tra tình trạng ống dẫn và van xả',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng cửa và kiểm tra'
+    ]
+  },
+  {
+    id: 'cooler-512-pellet6mini',
+    name: 'Cooler',
+    code: '512',
+    category: 'Làm mát',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở cửa kiểm tra bên trong cooler',
+      'Vệ sinh sạch cám viên tồn đọng và bụi bám',
+      'Kiểm tra tấm lưới thoát khí',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng cửa và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'sentai-519-pellet6mini',
+    name: 'Sên tải',
+    code: '519',
+    category: 'Vận chuyển',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'gautai-520-pellet6mini',
+    name: 'Gàu tải',
+    code: '520',
+    category: 'Vận chuyển',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'sen-521-pellet6mini',
+    name: 'Sên',
+    code: '521',
+    category: 'Vận chuyển',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'maysangcam-522-pellet6mini',
+    name: 'Máy sàng cám',
+    code: '522',
+    category: 'Sàng lọc',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn và chờ máy dừng hẳn',
+      'Tháo lưới sàng, vệ sinh sạch sẽ',
+      'Dùng chổi và khí nén làm sạch khung sàng',
+      'Kiểm tra lưới sàng có bị rách hoặc hỏng không',
+      'Lắp lại lưới sàng đúng vị trí',
+      'Vệ sinh bên ngoài máy và khu vực xung quanh'
+    ]
+  },
+  {
+    id: 'turnhead-523-pellet6mini',
+    name: 'Turnhead',
+    code: '523',
+    category: 'Phân phối',
+    line: 'Pellet 6 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp turnhead',
+      'Vệ sinh sạch nguyên liệu tồn đọng bên trong',
+      'Kiểm tra cơ cấu xoay và van chuyển hướng',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và kiểm tra hoạt động'
+    ]
+  },
+
+  // ==================== LINE: PELLET 7 MINI ====================
+  {
+    id: 'sen-605-pellet7mini',
+    name: 'Sên',
+    code: '605',
+    category: 'Vận chuyển',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'gautai-606-pellet7mini',
+    name: 'Gàu tải',
+    code: '606',
+    category: 'Vận chuyển',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'sen-607-pellet7mini',
+    name: 'Sên',
+    code: '607',
+    category: 'Vận chuyển',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'conditioner-608-pellet7mini',
+    name: 'Conditioner',
+    code: '608',
+    category: 'Ép viên',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp conditioner',
+      'Vệ sinh sạch nguyên liệu bám trên cánh khuấy và thành trong',
+      'Kiểm tra tình trạng cánh khuấy',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'conditioner-609-pellet7mini',
+    name: 'Conditioner',
+    code: '609',
+    category: 'Ép viên',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp conditioner',
+      'Vệ sinh sạch nguyên liệu bám trên cánh khuấy và thành trong',
+      'Kiểm tra tình trạng cánh khuấy',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'maycamvien-610-pellet7mini',
+    name: 'Máy cám viên',
+    code: '610',
+    category: 'Ép viên',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở nắp buồng ép',
+      'Vệ sinh sạch khuôn ép và con lăn',
+      'Kiểm tra tình trạng mài mòn khuôn và con lăn',
+      'Dùng khí nén thổi sạch toàn bộ buồng ép',
+      'Đóng nắp và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'vittaibuicyclone-615-pellet7mini',
+    name: 'Vít tải bụi cyclone',
+    code: '615',
+    category: 'Vận chuyển',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn vít tải',
+      'Mở nắp kiểm tra',
+      'Quét sạch bụi bám trên trục vít và máng',
+      'Kiểm tra tình trạng cánh vít',
+      'Dùng khí nén thổi sạch',
+      'Đóng nắp và siết chặt bu lông'
+    ]
+  },
+  {
+    id: 'cyclone-614-pellet7mini',
+    name: 'Cyclone',
+    code: '614',
+    category: 'Lọc',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở cửa kiểm tra bên trong cyclone',
+      'Vệ sinh sạch bụi và cặn bám trên thành trong',
+      'Kiểm tra tình trạng ống dẫn và van xả',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng cửa và kiểm tra'
+    ]
+  },
+  {
+    id: 'cooler-612-pellet7mini',
+    name: 'Cooler',
+    code: '612',
+    category: 'Làm mát',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn điện và khóa an toàn',
+      'Mở cửa kiểm tra bên trong cooler',
+      'Vệ sinh sạch cám viên tồn đọng và bụi bám',
+      'Kiểm tra tấm lưới thoát khí',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng cửa và kiểm tra trước khi vận hành'
+    ]
+  },
+  {
+    id: 'sentai-613-pellet7mini',
+    name: 'Sên tải',
+    code: '613',
+    category: 'Vận chuyển',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
+  },
+  {
+    id: 'gautai-616-pellet7mini',
+    name: 'Gàu tải',
+    code: '616',
+    category: 'Vận chuyển',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt gàu tải, khóa an toàn',
+      'Mở cửa kiểm tra chân gàu và đầu gàu',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra dây curoa và gàu múc',
+      'Dùng khí nén làm sạch',
+      'Đóng cửa và kiểm tra bu lông'
+    ]
+  },
+  {
+    id: 'sen-617-pellet7mini',
+    name: 'Sên',
+    code: '617',
+    category: 'Vận chuyển',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn sên tải',
+      'Mở nắp kiểm tra dọc theo thân sên',
+      'Quét sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt sên có bị mòn không',
+      'Dùng khí nén thổi sạch toàn bộ',
+      'Đóng nắp và kiểm tra'
+    ]
+  },
+  {
+    id: 'maysangcam-618-pellet7mini',
+    name: 'Máy sàng cám',
+    code: '618',
+    category: 'Sàng lọc',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Tắt nguồn và chờ máy dừng hẳn',
+      'Tháo lưới sàng, vệ sinh sạch sẽ',
+      'Dùng chổi và khí nén làm sạch khung sàng',
+      'Kiểm tra lưới sàng có bị rách hoặc hỏng không',
+      'Lắp lại lưới sàng đúng vị trí',
+      'Vệ sinh bên ngoài máy và khu vực xung quanh'
+    ]
+  },
+  {
+    id: 'sentai-621-pellet7mini',
+    name: 'Sên tải',
+    code: '621',
+    category: 'Vận chuyển',
+    line: 'Pellet 7 mini',
+    instructions: [
+      'Ngắt điện sên tải',
+      'Mở nắp dọc theo thân sên',
+      'Vệ sinh sạch nguyên liệu tồn đọng',
+      'Kiểm tra cánh gạt và xích tải',
+      'Thổi sạch bằng khí nén',
+      'Đóng nắp và kiểm tra an toàn'
+    ]
   }
 ];
 
@@ -867,11 +1852,19 @@ const CATEGORY_ICONS = {
   'Chứa': '📦',
   'Vận chuyển': '🔄',
   'Phân phối': '🔀',
-  'Ống dẫn': '🔧'
+  'Ống dẫn': '🔧',
+  'Nghiền': '🔨',
+  'Ép viên': '💊',
+  'Làm mát': '❄️'
 };
 
 // Line icons
 const LINE_ICONS = {
   'Mixer': '🏭',
-  'Intake': '📥'
+  'Intake': '📥',
+  'Intake mini': '📦',
+  'Mixer mini': '🔧',
+  'Regrinding mini': '🔨',
+  'Pellet 6 mini': '💊',
+  'Pellet 7 mini': '💎'
 };

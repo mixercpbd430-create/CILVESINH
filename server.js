@@ -271,6 +271,14 @@ app.post('/api/auth/login', async (req, res) => {
       });
     }
     
+    // Quick user login
+    if (username.toLowerCase() === 'user' && password === '123') {
+      return res.json({ 
+        success: true, 
+        user: { username: 'user', displayName: 'User', isAdmin: false, status: 'approved' }
+      });
+    }
+    
     // Normal user login
     const result = await pool.query(
       'SELECT id, username, display_name, status FROM users WHERE username = $1 AND password = $2',

@@ -347,11 +347,37 @@ body {
   opacity: 1;
 }
 
+/* Equipment sequence number */
+.eq-seq-num {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--accent);
+  background: rgba(6, 182, 212, 0.12);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+
+.eq-card.completed .eq-seq-num {
+  color: var(--success);
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
 .eq-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 10px;
+  padding-left: 30px;
 }
 
 .eq-card-name {
